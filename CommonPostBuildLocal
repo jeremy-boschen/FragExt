@@ -1,0 +1,4 @@
+
+CopyToVirtualMachineShare:
+   -ROBOCOPY "..\out\$O" D:\DOWNLOADS\FragExt\$(TARGETNAME)\$O *.EXE *.DLL *.MUI *.SYS *.MSI *.PDB /E /R:2 /W:5 /XF vc80.pdb >nul
+

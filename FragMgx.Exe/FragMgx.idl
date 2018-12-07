@@ -1,0 +1,68 @@
+cpp_quote("/* FragExt - Shell extension for providing file fragmentation")
+cpp_quote(" * information.")
+cpp_quote(" *")
+cpp_quote(" * Copyright (C) 2004-2009 Jeremy Boschen. All rights reserved.")
+cpp_quote(" *")
+cpp_quote(" * This software is provided 'as-is', without any express or implied")
+cpp_quote(" * warranty. In no event will the authors be held liable for any damages")
+cpp_quote(" * arising from the use of this software. ")
+cpp_quote(" *")
+cpp_quote(" * Permission is granted to anyone to use this software for any purpose,")
+cpp_quote(" * including commercial applications, and to alter it and redistribute it")
+cpp_quote(" * freely, subject to the following restrictions:")
+cpp_quote(" *")
+cpp_quote(" * 1. The origin of this software must not be misrepresented; you must not")
+cpp_quote(" * claim that you wrote the original software. If you use this software in")
+cpp_quote(" * a product, an acknowledgment in the product documentation would be")
+cpp_quote(" * appreciated but is not required.")
+cpp_quote(" *")
+cpp_quote(" * 2. Altered source versions must be plainly marked as such, and must not")
+cpp_quote(" * be misrepresented as being the original software.")
+cpp_quote(" *")
+cpp_quote(" * 3. This notice may not be removed or altered from any source")
+cpp_quote(" * distribution.")
+cpp_quote(" */")
+cpp_quote("")
+cpp_quote("")
+cpp_quote("/* FragMgx.idl")
+cpp_quote(" *    IDL source for FRAGMGX.EXE")
+cpp_quote(" *")
+cpp_quote(" * Copyright (C) 2004-2009 Jeremy Boschen")
+cpp_quote(" */")
+cpp_quote("")
+
+import "oaidl.idl";
+import "ocidl.idl";
+import "objidl.idl";
+
+[
+	uuid(C2D860BE-D466-4CA0-98BC-CD34526BD340),
+	version(1.0),
+   lcid(0x0000),
+	helpstring("FragExt Defrag Manager")
+]
+library FragMgx
+{   
+	importlib("stdole2.tlb");
+
+   [
+      object,
+      uuid(78C1E4AD-4235-4828-A872-98A21299DF81),
+      oleautomation,
+      pointer_default(unique),
+      helpstring("IDefragManager")
+   ]
+   interface IDefragManager : IUnknown
+   {
+      HRESULT QueueFile( [in, string] LPCWSTR FileName );
+   };
+
+   [
+      uuid(5B2289D9-86CC-46B5-9735-8B9B865C9833),
+      helpstring("DefragManager")
+   ]
+   coclass DefragManager
+   {
+      [default] interface IDefragManager;
+   };
+};

@@ -1,0 +1,63 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+
+/* FragExt - Shell extension for providing file fragmentation information.
+ *
+ * See the included License.txt for license information
+ */
+ 
+/* Mui.rcconfig
+ *    Master RC MUI configuration file for FragMgx resources.
+ *
+ * Copyright (C) 2004-2009 Jeremy Boschen
+ */      
+
+-->
+<localization>
+   <resources>
+      <win32Resources fileType="System" checksum="1C30DA7A01704899B749F29FEF7C4FCE" ultimateFallbackLanguage="en-US" ultimateFallbackLocation="external">
+         <neutralResources>
+            <!-- RT_CURSOR -->
+            <resourceType typeNameId="#1" itemId="1-65534" />
+            <!-- RT_BITMAP -->
+            <resourceType typeNameId="#2" itemId="1-65534" />
+            <!-- RT_ICON -->
+            <resourceType typeNameId="#3" itemId="1-65534" />
+            <!-- RT_VERSION -->
+            <resourceType typeNameId="#16" />
+            <!-- RT_MANIFEST -->
+            <resourceType typeNameId="#24" itemId="1-16"/>
+         </neutralResources>         
+         <localizedResources>
+            <!-- RT_MENU -->
+            <resourceType typeNameId="#4" />
+            <!-- RT_DIALOG -->
+            <resourceType typeNameId="#5" />
+            <!-- RT_STRING -->
+            <resourceType typeNameId="#6" />
+            <!-- RT_FONTDIR -->
+            <resourceType typeNameId="#7" />
+            <!-- RT_FONT -->
+            <resourceType typeNameId="#8" />
+            <!-- RT_ACCELERATORS -->
+            <resourceType typeNameId="#9" />
+            <!-- RT_RCDATA -->
+            <resourceType typeNameId="#10" />
+            <!-- RT_MESSAGETABLE -->
+            <resourceType typeNameId="#11" />
+            <!-- RT_GROUP_CURSOR -->
+            <resourceType typeNameId="#12" />
+            <!-- RT_GROUP_ICON -->
+            <resourceType typeNameId="#14" />
+            <!-- RT_VERSION -->
+            <resourceType typeNameId="#16" />
+            <!-- RT_ANICURSOR -->
+            <resourceType typeNameId="#21" />
+            <!-- RT_ANIICON -->
+            <resourceType typeNameId="#22" />
+            <!-- HTML -->
+            <resourceType typeNameId="#23" />
+         </localizedResources>
+      </win32Resources>
+   </resources>
+</localization>

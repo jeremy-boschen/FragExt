@@ -1,0 +1,70 @@
+!include ..\Sources.inc
+
+BUILD_PRODUCES       = FragShx.Dll
+BUILD_CONSUMES       = FragEng.Dll FragMgx.Exe
+
+COFFBASE_TXT_FILE    = ..\CoffBase.txt
+COFFBASE             = fragshx
+
+USE_NATIVE_EH        = 1
+
+PRECOMPILED_CXX      = 1
+PRECOMPILED_INCLUDE  = Stdafx.h
+PRECOMPILED_OBJ      = Stdafx.obj
+PRECOMPILED_PCH      = Stdafx.pch
+
+TARGETTYPE           = DYNLINK
+MAKEDLL              = 1
+DLLDEF               = FragShx.def
+TARGETNAME           = FragShx
+TARGETEXT            = dll
+
+USE_ATL              = 1
+ATL_VER              = 70
+
+NOT_LEAN_AND_MEAN    = 1
+
+C_DEFINES            = $(C_DEFINES) -DISOLATION_AWARE_ENABLED=1
+LINKER_FLAGS         = $(LINKER_FLAGS) /DELAYLOAD:UXTHEME.DLL /IGNORE:4199
+
+!IF $(FREEBUILD)
+USER_C_FLAGS         = $(USER_C_FLAGS) /D_LOADRESTRICTIONS_OFF /U_LOADRESTRICTIONS_ON
+!ENDIF
+
+#NTTARGETFILE0        = CustomPreBuild_Target
+#NTTARGETFILE1        = CustomBuild_Target
+#NTTARGETFILE2        = CustomPostBuild_Target
+
+TARGETLIBS = \
+   $(TARGETLIBS)                    \
+   $(SDK_LIB_PATH)\kernel32.lib     \
+   $(SDK_LIB_PATH)\user32.lib       \
+   $(SDK_LIB_PATH)\gdi32.lib        \
+   $(SDK_LIB_PATH)\advapi32.lib     \
+   $(SDK_LIB_PATH)\comdlg32.lib     \
+   $(SDK_LIB_PATH)\ole32.lib        \
+   $(SDK_LIB_PATH)\oleaut32.lib     \
+   $(SDK_LIB_PATH)\uuid.lib         \
+   $(SDK_LIB_PATH)\comctl32.lib     \
+   $(SDK_LIB_PATH)\shlwapi.lib      \
+   $(SDK_LIB_PATH)\shell32.lib      \
+   $(SDK_LIB_PATH)\uxtheme.lib      \
+   $(SDK_LIB_PATH)\delayimp.lib     \
+   $(ATL_LIB_PATH)\atls.lib         \
+   $(WSK_LIB_PATH)\MUILoad.lib      \
+   $(DDK_LIB_PATH)\ntdll.lib		\
+   ..\FragEng.Dll\$O\FragEng.lib    \
+   ..\FragExt.Lib\$O\FragExt.lib
+   
+SOURCES = \
+   FragShx-en-US.rc		\
+   DllMain.cpp          \
+   DllComServer.cpp     \
+   DllRegister.cpp      \
+   Module.cpp           \
+   Common.cpp           \
+   CtxMenu.cpp          \
+   PropPage.cpp         \
+   Column.cpp           \
+   FolderDlg.cpp        \
+

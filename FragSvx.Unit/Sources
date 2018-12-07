@@ -1,0 +1,46 @@
+
+!include ..\Sources.inc
+
+BUILD_PRODUCES       = FragSvx.Unit.Exe
+BUILD_CONSUMES       = FragExt.Lib FragEng.Dll FragSvx.Exe
+
+USE_NATIVE_EH        = 1
+
+TARGETTYPE           = PROGRAM
+TARGETNAME           = FragSvx.Unit
+TARGETEXT            = exe
+UMTYPE               = console
+UMENTRY              = wmain
+
+MSC_OPTIMIZATION  = /GL-
+C_DEFINES            = $(C_DEFINES) /FAs
+LINKER_FLAGS         = $(LINKER_FLAGS) /NXCOMPAT
+
+#USER_C_FLAGS = $(USER_C_FLAGS) /FAs
+LINKER_FLAGS = $(LINKER_FLAGS) /VERBOSE
+
+TARGETLIBS = \
+   $(TARGETLIBS) \
+   $(SDK_LIB_PATH)\kernel32.lib     \
+   $(SDK_LIB_PATH)\user32.lib       \
+   $(SDK_LIB_PATH)\advapi32.lib     \
+   $(SDK_LIB_PATH)\ole32.lib        \
+   $(SDK_LIB_PATH)\oleaut32.lib     \
+   $(SDK_LIB_PATH)\uuid.lib         \
+   $(SDK_LIB_PATH)\wbemuuid.lib     \
+   $(SDK_LIB_PATH)\ntdll.lib        \
+   $(SDK_LIB_PATH)\rpcrt4.lib       \
+   $(WSK_LIB_PATH)\winhttp.lib      \
+   ..\FragExt.Lib\$O\FragExt.lib    \
+   ..\FragEng.Dll\$O\FragEng.lib
+
+SOURCES =  \
+   Main.cpp \
+   Test.cpp
+
+#i386_SOURCES =   \
+#   i386\X86WndProcProxy.asm
+   
+AMD64_SOURCES =   \
+   amd64\X64WndProcProxy.asm
+   

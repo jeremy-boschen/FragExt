@@ -1,0 +1,136 @@
+
+#include "Resource.h"
+#include <winres.h>
+#include <commctrl.h>
+
+/////////////////////////////////////////////////////////////////////////////
+//
+// English (U.S.) resources
+//
+LANGUAGE LANG_ENGLISH, SUBLANG_ENGLISH_US
+#pragma code_page(65001)
+
+/////////////////////////////////////////////////////////////////////////////
+//
+// Include the Language Neutral resources
+//
+#include "FragMgx-LN.rc"
+
+/////////////////////////////////////////////////////////////////////////////
+//
+// Dialog
+//
+IDD_DEFRAGMANAGER DIALOGEX 0, 0, 373, 176
+STYLE DS_SETFONT | DS_MODALFRAME | DS_3DLOOK | DS_FIXEDSYS | DS_CENTER | WS_MINIMIZEBOX | WS_MAXIMIZEBOX | WS_POPUP | WS_VISIBLE | WS_CAPTION | WS_SYSMENU | WS_THICKFRAME
+EXSTYLE WS_EX_ACCEPTFILES
+CAPTION "FragExt - Defrag Manager"
+CLASS FRAGMGXDLGCLS
+FONT 8, "MS Shell Dlg", 400, 0, 1
+BEGIN
+    PUSHBUTTON    "&Pause",IDC_PAUSE,312,7,54,16,WS_DISABLED | WS_GROUP
+    PUSHBUTTON    "&Cancel",IDC_CANCEL,312,27,54,16,WS_DISABLED
+    PUSHBUTTON    "&Add File...",IDC_ADDFILE,312,47,54,16
+    LTEXT         "",IDC_DEFRAGSTATUS,7,7,149,9, SS_LEFT
+    LTEXT         "",IDC_DEFRAGPERCENT,158,7,149,9, SS_RIGHT
+    CONTROL       "",IDC_DEFRAGPROGRESS,"msctls_progress32",PBS_SMOOTH,7,16,300,14
+    EDITTEXT      IDC_DEFRAGLOG,7,35,300,120,ES_AUTOVSCROLL | ES_LEFT | ES_MULTILINE | ES_READONLY | WS_VSCROLL 
+    LTEXT         "",IDC_COMPLETESTATUS,8,159,300,12
+    CONTROL       "",IDC_PUSHPIN,"ToolbarWindow32",TBSTYLE_TRANSPARENT | TBSTYLE_FLAT | CCS_NODIVIDER | CCS_NOPARENTALIGN | CCS_TOP,350,155,16,16
+END
+
+IDD_ABOUTBOX DIALOGEX 0, 0, 241, 94
+STYLE DS_SETFONT | DS_MODALFRAME | DS_3DLOOK | DS_FIXEDSYS | DS_CENTER | WS_POPUP | WS_CAPTION | WS_SYSMENU
+CAPTION "About FragExt"
+FONT 8, "MS Shell Dlg", 400, 0, 1
+BEGIN
+   DEFPUSHBUTTON     "OK", IDOK, 184,74,50,14, WS_TABSTOP | WS_GROUP
+   ICON              IDI_FRAGMGX, IDC_ABOUTICON, 7,7,32,32
+   LTEXT             "", IDC_ABOUTINFO, 33,9,202,24, SS_LEFT
+   CONTROL           "", -1, "Static", SS_ETCHEDHORZ, 8,41,226,1 
+   CONTROL           "For more information and upates, please visit the website.\n<a href=""http://www.mutexed.com/code/FragExt"">http://www.mutexed.com/code/FragExt/</a>", IDC_LINKFRAGEXT, "SysLink", WS_TABSTOP, 7,49,193,16
+END
+
+IDD_DEFRAGMGR DIALOGEX 0, 0, 383, 220
+STYLE DS_SETFONT | DS_MODALFRAME | DS_3DLOOK | DS_FIXEDSYS | DS_CENTER | WS_MINIMIZEBOX | WS_MAXIMIZEBOX | WS_POPUP | WS_VISIBLE | WS_CAPTION | WS_SYSMENU | WS_THICKFRAME
+EXSTYLE WS_EX_ACCEPTFILES
+CAPTION "FragExt Defrag Manager"
+//CLASS FRAGMGXDLGCLS
+MENU IDR_MGRMENU
+FONT 8, "MS Shell Dlg", 0, 0, 0x1
+BEGIN
+    CONTROL         "",IDC_DEFRAGMGR_FILELIST,"SysListView32",LVS_REPORT | LVS_SINGLESEL | LVS_ALIGNLEFT | LVS_NOSORTHEADER | WS_BORDER | WS_TABSTOP,7,7,369,206
+END
+
+/////////////////////////////////////////////////////////////////////////////
+//
+// Menu
+//
+IDR_TRAYMENU MENU 
+BEGIN
+   POPUP ""
+   BEGIN
+      MENUITEM "&Show Manager",                 IDM_TRAYMENUSHOW
+      MENUITEM "&Hide Manager",                 IDM_TRAYMENUHIDE
+      MENUITEM SEPARATOR
+      MENUITEM "&About FragExt...",             IDM_TRAYMENUABOUT
+      MENUITEM SEPARATOR
+      MENUITEM "E&xit",                         IDM_TRAYMENUEXIT
+   END
+END
+
+IDR_MGRMENU MENU 
+BEGIN
+   POPUP "&File"
+   BEGIN
+      MENUITEM "&Settings...",                  IDM_MGRMENU_FILE_SETTINGS
+      MENUITEM SEPARATOR
+      MENUITEM "E&xit",                         IDM_MGRMENU_FILE_EXIT
+   END
+   POPUP "&Defragment"
+   BEGIN
+      POPUP "&Add"
+      BEGIN
+         MENUITEM "&File(s)...",                IDM_MGRMENU_DEFRAG_ADDFILE
+         MENUITEM "&Directory...",              IDM_MGRMENU_DEFRAG_ADDDIRECTORY
+      END
+      MENUITEM SEPARATOR
+      MENUITEM "&Pause",                        IDM_MGRMENU_DEFRAG_PAUSE
+      MENUITEM "&Resume",                       IDM_MGRMENU_DEFRAG_RESUME
+      MENUITEM "&Stop",                         IDM_MGRMENU_DEFRAG_STOP
+   END
+   POPUP "&Help"
+   BEGIN
+      MENUITEM "&About FragExt...",             IDM_MGRMENU_HELP_ABOUT
+   END
+END
+
+/////////////////////////////////////////////////////////////////////////////
+//
+// String Table
+//
+STRINGTABLE
+BEGIN
+   IDS_OPENFILE_FILTER                 "All Files (*.*)\0*.*\0\0"
+   IDS_OPENFILE_ALTERNATE_STREAMS      "Include alternate data streams"
+
+   IDS_TRAY_TIP_DEFAULT                "FragExt - Defrag Manager"
+   IDS_TRAY_TIP_PROCESSING             "FragExt - Defrag Manager\nFile: %s\nPercent: %d%%"
+
+   IDS_STATUS_TASKS_PROGRESS           "Completed processing %1!u! of %2!u! files"
+
+   IDS_BUTTON_PAUSE                    "&Pause"
+   IDS_BUTTON_RESUME                   "Resu&me"
+
+   IDS_DEFRAGSTATUS_FILEINITIALIZING   "Initializing..."
+   IDS_DEFRAGSTATUS_FILEDEFRAGMENTING  "Defragmenting..."
+   IDS_DEFRAGSTATUS_FILECOMPLETED      "Completed"
+
+   IDS_DEFRAGSTATUS_SYSERRORUNKNOWN    "Unknown error."   
+
+   IDS_DEFRAGLOG_FILEINITIALIZING      "%nDefragmenting %3%n%0"
+   IDS_DEFRAGLOG_FILEDEFRAGMENTING     "%0"
+   IDS_DEFRAGLOG_FILECOMPLETED         "Successfully defragmented %3%n%0"
+   IDS_DEFRAGLOG_FILEFAILED            "Failed to defragment %3. Error 0x%1!08x!, %2%n%0"
+
+   IDS_ABOUT_INFORMATION               "FragExt - %1\n%2\n" PRODUCTCOPYRIGHTSTRING "%0"
+END

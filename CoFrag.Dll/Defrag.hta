@@ -1,0 +1,139 @@
+<!--
+/**  
+ * FragExt - Shell extensions for providing file fragmentation
+ * information.
+ *
+ * Copyright (C) 2004-2005 Jeremy Boschen. All rights reserved.
+ *
+ * This software is provided 'as-is', without any express or implied
+ * warranty. In no event will the authors be held liable for any damages
+ * arising from the use of this software. 
+ *
+ * Permission is granted to anyone to use this software for any purpose,
+ * including commercial applications, and to alter it and redistribute it
+ * freely, subject to the following restrictions:
+ *
+ * 1. The origin of this software must not be misrepresented; you must not
+ * claim that you wrote the original software. If you use this software in
+ * a product, an acknowledgment in the product documentation would be
+ * appreciated but is not required.
+ *
+ * 2. Altered source versions must be plainly marked as such, and must not
+ * be misrepresented as being the original software.
+ *
+ * 3. This notice may not be removed or altered from any source
+ * distribution.
+ **/
+
+/* Defrag.hta
+ *    Demo usage of FragExt.FileDefragmenter component
+ *
+ * Copyright (C) 2004-2005 Jeremy Boschen
+ *
+ * Version History
+ *      0.0.001 - 10/31/2004 - Created
+ *
+ * Usage:
+ *    Defrag.hta C:\SomeFile.ext
+ */
+-->
+<html>
+   <head>
+      <title>FragExt - File Defragmenter Example</title>
+      
+      <script language="javascript">
+         window.resizeTo(600, 350);
+      </script>
+      
+      <hta:application id="idApp" applicationname="Fragext - File Defragmenter Example" border="thin"
+borderstyle="normal" caption="yes" contextmenu="yes" icon="" innerborder="off" maximizebutton="no" minimizebutton="yes" showintaskbar="yes" selection="off" scroll="off" singleinstance="no" sysmenu="yes" version="1.0" windowstate="normal" />
+
+      <script language="javascript" defer>
+         var oFileSys = null;
+         var oDefrag  = null;
+
+         function dumpText( sText ) {
+            var idTx = document.getElementById('idProgress');            
+            idTx.innerHTML += sText + '<BR />';
+         }
+         
+         function onProgressUpdate( sPath, eState, iPercent, iCookie ) {
+            switch ( eState ) {
+               case 1:
+                  dumpText('Initializing ' + sPath);
+                  break;
+               case 2:
+                  dumpText('Defragmenting ' + sPath + '(' + iPercent + '%)');
+                  break;
+               case 3:
+                  if ( 0 != oDefrag.resultCode ) {
+                     dumpText('Failed to defragment file due to error ' + oDefrag.resultCode);                    
+                  } else {
+                     dumpText('Completed defragmenting ' + sPath);
+                  }
+                  dumpText('');
+                  break;
+            }
+            
+            /* true cancels */
+            return ( false );
+         }
+         
+         function onLoad( ) {
+            var idTx = document.getElementById('idProgress');
+            try {
+               oFileSys  = new ActiveXObject('Scripting.FileSystemObject');
+               oDefrag   = new ActiveXObject('FragExt.FileDefragmenter');         
+               
+               var rgCmdLine = idApp.commandLine.split(' ');
+               
+               if ( !oFileSys || !oDefrag ) {
+                  dumpText('Failed to initialize file defragmenter');
+                  /* Failure */   
+                  return;
+               }
+               
+               oDefrag.OnProgressUpdate = onProgressUpdate;
+               
+               for ( var i = 1; i < rgCmdLine.length; i++ ) {
+                  if ( oFileSys.FileExists(rgCmdLine[i]) ) {
+                     oDefrag.DefragmentFile(rgCmdLine[i], true, 0);
+                  } 
+               }               
+            }
+            catch ( e ) {
+                dumpText('An unexpected error occured. ' + e.number + ' ' + e.description);
+            }            
+         }
+         
+         function onFileChange( elm ) {
+            if ( oFileSys.FileExists(elm.value) ) {
+                oDefrag.DefragmentFile(elm.value, 0);
+            }
+         }
+      </script>
+      
+      <style media="all" type="text/css">
+         p, div, input {
+            font-family: Tahoma,Verdana,Arial;
+         }
+      </style>
+   </head>
+   <body onload="onLoad();" style="margin: 10px;">
+      <form style="margin: 0px; padding: 0px" onsubmit="return false;" id="Form1">               
+         <table border="0" cellpadding="0" cellspacing="0" height="100%" width="100%">
+            <tr>
+               <td align="left" width="100%" valign="top">
+                  <p style="font-size: 20px">FragExt - File Defragmenter Example</p>
+                  <div id="idProgress" style="border: 3px window-inset; height: 200px; margin: 0px; padding: 0px; width: 100%; overflow-x: scroll; overflow-y: scroll; font-size: smaller"></div></td>
+            </tr>
+            <tr>
+               <td align="right" width="100%" valign="top">
+                  <input unselectable onpropertychange="onFileChange(this);" type="file" style="height: 24px; width: 460px" value="Browse..." />
+                  <input onclick="window.close()" style="height: 24px; width: 80px" type="button" value="Close" />
+               </td>
+            </tr>
+         </table>
+      </form>
+   </body>
+</html>

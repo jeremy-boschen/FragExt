@@ -1,0 +1,330 @@
+cpp_quote("/* FragExt - Shell extension for providing file fragmentation")
+cpp_quote(" * information.")
+cpp_quote(" *")
+cpp_quote(" * Copyright (C) 2004-2009 Jeremy Boschen. All rights reserved.")
+cpp_quote(" *")
+cpp_quote(" * This software is provided 'as-is', without any express or implied")
+cpp_quote(" * warranty. In no event will the authors be held liable for any damages")
+cpp_quote(" * arising from the use of this software. ")
+cpp_quote(" *")
+cpp_quote(" * Permission is granted to anyone to use this software for any purpose,")
+cpp_quote(" * including commercial applications, and to alter it and redistribute it")
+cpp_quote(" * freely, subject to the following restrictions:")
+cpp_quote(" *")
+cpp_quote(" * 1. The origin of this software must not be misrepresented; you must not")
+cpp_quote(" * claim that you wrote the original software. If you use this software in")
+cpp_quote(" * a product, an acknowledgment in the product documentation would be")
+cpp_quote(" * appreciated but is not required.")
+cpp_quote(" *")
+cpp_quote(" * 2. Altered source versions must be plainly marked as such, and must not")
+cpp_quote(" * be misrepresented as being the original software.")
+cpp_quote(" *")
+cpp_quote(" * 3. This notice may not be removed or altered from any source")
+cpp_quote(" * distribution.")
+cpp_quote(" */")
+cpp_quote("")
+
+/* CoFrag.idl
+ *    IDL source for CoFrag.dll
+ *
+ * Copyright (C) 2004-2009 Jeremy Boschen
+ *
+ * Version History
+ *    0.0.001 - 10/31/2004 - Created
+ */
+
+import "oaidl.idl";
+import "ocidl.idl";
+import "objidl.idl";
+
+[
+	uuid(739FCD59-2B48-4908-B906-43A26C58007D),
+   helpstring("FragExt Engine"),
+   lcid(0x0000),
+	version(1.0)
+]
+library FragEng
+{
+	importlib("stdole2.tlb");
+
+   #define DISPID_FILEFRAG_SEQUENCE          1
+   #define DISPID_FILEFRAG_EXTENTCOUNT       2
+   #define DISPID_FILEFRAG_CLUSTERCOUNT      3
+   #define DISPID_FILEFRAG_LOGICALCLUSTER    4
+   
+   cpp_quote("#define DISPID_FILEFRAG_SEQUENCE       1")
+   cpp_quote("#define DISPID_FILEFRAG_EXTENTCOUNT    3")
+   cpp_quote("#define DISPID_FILEFRAG_CLUSTERCOUNT   4")
+   cpp_quote("#define DISPID_FILEFRAG_LOGICALCLUSTER 2")
+   
+   [
+      object,
+      uuid(1D046FDF-FCD7-4AB8-9C21-5FB01B463263),
+      dual,
+      nonextensible,
+      pointer_default(unique),
+      helpstring("IFileFragment")
+   ]
+   interface IFileFragment : IDispatch
+   {
+      [id(DISPID_FILEFRAG_SEQUENCE), propget]
+      HRESULT Sequence( [out, retval] LONG* piResult );
+
+      [id(DISPID_FILEFRAG_EXTENTCOUNT), propget]
+      HRESULT ExtentCount( [out, retval] LONG* piResult );
+
+      [id(DISPID_FILEFRAG_CLUSTERCOUNT), propget]
+      HRESULT ClusterCount( [out, retval] double* pdbiResult );
+
+      [id(DISPID_FILEFRAG_LOGICALCLUSTER), propget]
+      HRESULT LogicalCluster( [out, retval] double* pdbiResult );
+   };
+
+   [
+      uuid(D5DE6F41-07AE-4DA2-A816-C456DC642185),
+      hidden,
+      noncreatable,
+      helpstring("FileFragment")
+   ]
+   coclass FileFragment
+   {
+      [default] interface IFileFragment;
+   };
+
+   #define DISPID_FILEFRAGS_COUNT            1
+   #define DISPID_FILEFRAGS_OPENFILE         2
+   #define DISPID_FILEFRAGS_FRAGMENTCOUNT    3
+   #define DISPID_FILEFRAGS_EXTENTCOUNT      4
+   #define DISPID_FILEFRAGS_CLUSTERCOUNT     5
+   #define DISPID_FILEFRAGS_FILESIZE         6
+   #define DISPID_FILEFRAGS_FILESIZEONDISK   7
+   #define DISPID_FILEFRAGS_CLUSTERSIZE      8
+   
+   cpp_quote("#define DISPID_FILEFRAGS_COUNT             1")
+   cpp_quote("#define DISPID_FILEFRAGS_OPENFILE          2")
+   cpp_quote("#define DISPID_FILEFRAGS_FRAGMENTCOUNT     3")
+   cpp_quote("#define DISPID_FILEFRAGS_EXTENTCOUNT       4")
+   cpp_quote("#define DISPID_FILEFRAGS_CLUSTERCOUNT      5")
+   cpp_quote("#define DISPID_FILEFRAGS_FILESIZE          6")
+   cpp_quote("#define DISPID_FILEFRAGS_FILESIZEONDISK    7")
+   cpp_quote("#define DISPID_FILEFRAGS_CLUSTERSIZE       8")
+
+   [
+	   object,
+	   uuid(0B66D1B3-0769-4CAA-8581-1B6AF1E1FB1B),
+      dual,
+	   nonextensible,
+	   pointer_default(unique),
+      helpstring("IFileFragments")
+   ]
+   interface IFileFragments : IDispatch
+   {
+      [id(DISPID_NEWENUM), propget, restricted, hidden]
+      HRESULT _NewEnum( [out, retval] IUnknown** ppEnum );
+
+      [id(DISPID_VALUE), propget]
+      HRESULT Item( [in] LONG iIndex, [out, retval] IDispatch** ppFragment );
+
+      [id(DISPID_FILEFRAGS_COUNT), propget]
+      HRESULT Count( [out, retval] LONG* plCount );
+
+      [id(DISPID_FILEFRAGS_OPENFILE)]
+      HRESULT OpenFile( [in] BSTR bszFile, [in] VARIANT_BOOL bIncludeCompressed, [out, retval] VARIANT_BOOL* pbOpened );
+
+      [id(DISPID_FILEFRAGS_FRAGMENTCOUNT), propget]
+      HRESULT FragmentCount( [out, retval] LONG* piResult );
+
+      [id(DISPID_FILEFRAGS_EXTENTCOUNT), propget]
+      HRESULT ExtentCount( [out, retval] LONG* piResult );
+
+      [id(DISPID_FILEFRAGS_CLUSTERCOUNT), propget]
+      HRESULT ClusterCount( [out, retval] double* pdbiResult );
+
+      [id(DISPID_FILEFRAGS_FILESIZE), propget]
+      HRESULT FileSize( [out, retval] double* pdbiResult );
+
+      [id(DISPID_FILEFRAGS_FILESIZEONDISK), propget]
+      HRESULT FileSizeOnDisk( [out, retval] double* pdbiResult );
+
+      [id(DISPID_FILEFRAGS_CLUSTERSIZE), propget]
+      HRESULT ClusterSize( [out, retval] LONG* piResult );
+   };
+   
+	[
+		uuid(2970890C-BA3B-45F6-A7EC-85606DE2ADB9),
+      helpstring("FileFragments")
+	]
+	coclass FileFragments
+	{
+		[default] interface IFileFragments;
+	};
+
+   [
+      uuid(14EEECA3-36D6-46A8-974F-59BF1B7C25AE)
+   ]
+   typedef enum _PROGRESSSTATE
+   {
+      PGS_INACTIVE      = 0,
+      PGS_INITIALIZING  = 1,
+      PGS_DEFRAGMENTING = 2,
+      PGS_COMPLETED     = 3
+   }PROGRESSSTATE;
+
+   #define DISPID_FILEDEFRAG_DEFRAGMENTFILE    1
+   #define DISPID_FILEDEFRAG_CANCEL            2
+   #define DISPID_FILEDEFRAG_ONPROGRESSUPDATE  3
+   #define DISPID_FILEDEFRAG_PROGRESSSTATE     4
+   #define DISPID_FILEDEFRAG_RESULTCODE        5
+   #define DISPID_FILEDEFRAG_PERCENTCOMPLETE   6
+
+   cpp_quote("#define DISPID_FILEDEFRAG_DEFRAGMENTFILE    1")
+   cpp_quote("#define DISPID_FILEDEFRAG_CANCEL            2")
+   cpp_quote("#define DISPID_FILEDEFRAG_ONPROGRESSUPDATE  3")
+   cpp_quote("#define DISPID_FILEDEFRAG_PROGRESSSTATE     4")
+   cpp_quote("#define DISPID_FILEDEFRAG_RESULTCODE        5")
+   cpp_quote("#define DISPID_FILEDEFRAG_PERCENTCOMPLETE   6")
+
+   [
+      object,        
+      uuid(A9E4A961-5640-4EE9-98B2-AF2C26CF1C25),
+      dual,
+      nonextensible,
+      pointer_default(unique),
+      helpstring("IFileDefragmenter")
+   ]
+   interface IFileDefragmenter : IDispatch
+   {
+      [id(DISPID_FILEDEFRAG_DEFRAGMENTFILE)]
+      HRESULT DefragmentFile( [in] BSTR bszFile, [in] LONG iCookie, [out, retval] VARIANT_BOOL* pbResult );
+
+      [id(DISPID_FILEDEFRAG_CANCEL)]
+      HRESULT Cancel( );
+
+      [id(DISPID_FILEDEFRAG_ONPROGRESSUPDATE), propput]
+      HRESULT OnProgressUpdate( [in] IUnknown* pCallback );
+
+      [id(DISPID_FILEDEFRAG_PROGRESSSTATE), propget]
+      HRESULT ProgressState( [out, retval] PROGRESSSTATE* peState );
+
+      [id(DISPID_FILEDEFRAG_RESULTCODE), propget]
+      HRESULT ResultCode( [out, retval] LONG* piResult );
+
+      [id(DISPID_FILEDEFRAG_PERCENTCOMPLETE), propget]
+      HRESULT PercentComplete( [out, retval] LONG* piPercent );
+   };
+
+   #define DISPID_ONPROGRESSUPDATE 0
+
+   cpp_quote("#define DISPID_ONPROGRESSUPDATE 0")
+
+   [
+      hidden,
+      uuid(A97059DB-1B04-425B-80B6-9238A1338463),
+      helpstring("DFileDefragmenterEvents")
+   ]
+   dispinterface DFileDefragmenterEvents
+   {
+   properties:
+   methods:
+      [id(DISPID_ONPROGRESSUPDATE)] 
+      void OnProgressUpdate( [in] BSTR bszFile, [in] PROGRESSSTATE eState, [in] LONG iPercent, [in] LONG iCookie, [in, out] VARIANT_BOOL* pbCancel );
+   };
+
+   [
+      object,
+      hidden,
+      uuid(113B0A4A-AEE5-4899-982D-299774CF0D6C),
+      oleautomation,
+      pointer_default(unique),
+      helpstring("IFileDefragmenterEvents")
+   ]
+   interface IFileDefragmenterEvents : IUnknown
+   {
+      HRESULT OnProgressUpdate( [in] BSTR bszFile, [in] LONG iCookie, [in] PROGRESSSTATE eState, [in] LONG iPercent, [out, retval] VARIANT_BOOL* pbCancel );
+   };
+
+   cpp_quote("#define IsVirtualCluster( iLCN ) (-1 == (iLCN))")
+
+   [
+      uuid(D06EDAF1-7E7D-41D7-8D1C-CB31BFD20B97),
+      helpstring("FileDefragmenter")
+   ]
+   coclass FileDefragmenter
+   {
+      [default]                        interface     IFileDefragmenter;
+      [default, defaultvtable, source] interface     IFileDefragmenterEvents;
+      [source]                         dispinterface DFileDefragmenterEvents;
+   };
+
+   #define DISPID_FILESTREAM_NAME 0
+   #define DISPID_FILESTREAM_SIZE 1
+
+   cpp_quote("#define DISPID_FILESTREAM_NAME 0")
+   cpp_quote("#define DISPID_FILESTREAM_SIZE 1")
+
+   [
+      object,
+      uuid(3E096844-2F07-41F5-A226-618C26784FA9),
+      dual,
+      nonextensible,
+      pointer_default(unique),
+      helpstring("IFileStream")
+   ]
+   interface IFileStream : IDispatch
+   {
+      [id(DISPID_FILESTREAM_NAME), propget]
+      HRESULT Name( [out, retval] BSTR* pbszName );
+
+      [id(DISPID_FILESTREAM_SIZE), propget]
+      HRESULT Size( [out, retval] double* pdblSize );
+   };
+
+   [
+      uuid(74CCF722-3BA8-4026-8DBE-5282F057E292),
+      noncreatable,
+      hidden,
+      helpstring("FileStream")
+   ]
+   coclass FileStream
+   {
+      [default] interface IFileStream;
+   };
+
+   #define DISPID_FILESTREAMS_COUNT    1
+   #define DISPID_FILESTREAMS_OPENFILE 2
+
+   cpp_quote("#define DISPID_FILESTREAMS_COUNT    1")
+   cpp_quote("#define DISPID_FILESTREAMS_OPENFILE 2")
+
+   [
+      object,
+      uuid(5DA0A7DE-77D0-4E9B-A528-1081B655AB02),
+      dual,
+      nonextensible,
+      pointer_default(unique),
+      helpstring("IFileStreams")
+   ]
+   interface IFileStreams : IDispatch
+   {
+      [id(DISPID_NEWENUM), propget, restricted, hidden]
+      HRESULT _NewEnum( [out, retval] IUnknown** ppEnum );
+
+      [id(DISPID_VALUE), propget]
+      HRESULT Item( [in] LONG iIndex, [out, retval] IDispatch** ppStream );
+
+      [id(DISPID_FILESTREAMS_COUNT), propget]
+      HRESULT Count( [out, retval] LONG* plCount );
+
+      [id(DISPID_FILESTREAMS_OPENFILE)]
+      HRESULT OpenFile( [in] BSTR bszFile, [out, retval] VARIANT_BOOL* pbOpened );
+   };
+
+   [
+      uuid(C22183C2-84A4-4BB7-B354-73B6998CCC85),
+      helpstring("NTFS File Streams")
+   ]
+   coclass FileStreams
+   {
+      [default] interface IFileStreams;
+   };
+};

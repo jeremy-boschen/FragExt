@@ -1,0 +1,60 @@
+
+!include ..\Sources.inc
+
+BUILD_PRODUCES       = FragSvx.Exe
+BUILD_CONSUMES       = FragExt.Lib FragEng.Dll
+
+COFFBASE_TXT_FILE    = ..\CoffBase.txt
+COFFBASE             = fragsvx
+
+USE_NATIVE_EH        = 1
+
+PRECOMPILED_CXX      = 1
+PRECOMPILED_INCLUDE  = Stdafx.h
+PRECOMPILED_OBJ      = Stdafx.obj
+PRECOMPILED_PCH      = Stdafx.pch
+
+TARGETTYPE           = PROGRAM
+TARGETNAME           = FragSvx
+TARGETEXT            = exe
+UMTYPE               = console
+UMENTRY              = wmain
+
+!if $(FREEBUILD)
+C_DEFINES            = $(C_DEFINES) /D_FRAGSVX_IGNORECONTIGUOUSFILES
+!else
+C_DEFINES            = $(C_DEFINES) /D_WAITFORDEBUGGER
+!endif
+
+C_DEFINES            = $(C_DEFINES) /DWPP_FRAGSVX
+LINKER_FLAGS         = $(LINKER_FLAGS) /NXCOMPAT
+
+IDL_TYPE             = OLE
+MIDL_TARGET          = NT51
+MIDL_UUIDDIR         = $(OBJ_PATH)\$O
+MIDL_FLAGS           = $(MIDL_FLAGS) /out $O
+
+#PASS0_HEADERDIR		= $(MAKEDIR_LOWERCASE:fragsvx.exe=)inc\
+
+#USER_C_FLAGS = $(USER_C_FLAGS) /FAs /P
+#LINKER_FLAGS = $(LINKER_FLAGS) /VERBOSE
+
+TARGETLIBS = \
+   $(TARGETLIBS) \
+   $(SDK_LIB_PATH)\kernel32.lib     \
+   $(SDK_LIB_PATH)\advapi32.lib     \
+   $(SDK_LIB_PATH)\ole32.lib        \
+   $(SDK_LIB_PATH)\uuid.lib         \
+   $(SDK_LIB_PATH)\wbemuuid.lib     \
+   $(SDK_LIB_PATH)\ntdll.lib        \
+   $(SDK_LIB_PATH)\rpcrt4.lib       \
+   ..\FragExt.Lib\$O\FragExt.lib    \
+   ..\FragEng.Dll\$O\FragEng.lib
+
+SOURCES =  \
+   FragSvx-en-US.rc     \
+   FragSvx.idl          \
+   SvxEntry.cpp         \
+   ServiceCtl.cpp       \
+   ServiceMgr.cpp       \
+   DiskDefrag.cpp

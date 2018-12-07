@@ -1,0 +1,76 @@
+One file.. 
+
+Entered	Lock = 1, gModuleLockCount = +0, cSpLockCount = -1, bSignaled = -1
+Exit   	Lock = 1, gModuleLockCount = +1, cSpLockCount = -1, bSignaled = +255
+
+Entered	Lock = 1, gModuleLockCount = +1, cSpLockCount = -1, bSignaled = -1
+Exit   	Lock = 1, gModuleLockCount = +2, cSpLockCount = -1, bSignaled = +255
+
+Entered	Lock = 0, gModuleLockCount = +2, cSpLockCount = -1, bSignaled = -1
+Exit   	Lock = 0, gModuleLockCount = +1, cSpLockCount = -1, bSignaled = +255
+
+Entered	Lock = 0, gModuleLockCount = +1, cSpLockCount = -1, bSignaled = -1
+Exit   	Lock = 0, gModuleLockCount = -1, cSpLockCount = -1, bSignaled = +255
+
+Entered	Lock = 0, gModuleLockCount = -1, cSpLockCount = -1, bSignaled = -1
+Exit   	Lock = 0, gModuleLockCount = -2, cSpLockCount = +0, bSignaled = +255
+
+
+
+
+Entered	Lock = 1, gModuleLockCount = +0, cSpLockCount = -1, bSignaled = -1
+Exit   	Lock = 1, gModuleLockCount = +1, cSpLockCount = -1, bSignaled = +255
+
+Entered	Lock = 1, gModuleLockCount = +1, cSpLockCount = -1, bSignaled = -1
+Exit   	Lock = 1, gModuleLockCount = +2, cSpLockCount = -1, bSignaled = +255
+
+Entered	Lock = 0, gModuleLockCount = +2, cSpLockCount = -1, bSignaled = -1
+Exit   	Lock = 0, gModuleLockCount = +1, cSpLockCount = -1, bSignaled = +255
+
+Entered	Lock = 0, gModuleLockCount = +1, cSpLockCount = -1, bSignaled = -1
+Exit   	Lock = 0, gModuleLockCount = -1, cSpLockCount = -1, bSignaled = +255
+
+Entered	Lock = 0, gModuleLockCount = -1, cSpLockCount = -1, bSignaled = -1
+Exit   	Lock = 0, gModuleLockCount = -2, cSpLockCount = +0, bSignaled = +255
+
+
+
+Entered	Lock = 1, gModuleLockCount = +0, cSpLockCount = -1, bSignaled = -1
+Exit   	Lock = 1, gModuleLockCount = +1, cSpLockCount = -1, bSignaled = +255
+
+Entered	Lock = 1, gModuleLockCount = +1, cSpLockCount = -1, bSignaled = -1
+Exit   	Lock = 1, gModuleLockCount = +2, cSpLockCount = -1, bSignaled = +255
+
+Entered	Lock = 0, gModuleLockCount = +2, cSpLockCount = -1, bSignaled = -1
+Exit   	Lock = 0, gModuleLockCount = +1, cSpLockCount = -1, bSignaled = +255
+
+Entered	Lock = 0, gModuleLockCount = +1, cSpLockCount = -1, bSignaled = -1
+Exit   	Lock = 0, gModuleLockCount = -1, cSpLockCount = -1, bSignaled = +255
+
+Entered	Lock = 1, gModuleLockCount = -1, cSpLockCount = -1, bSignaled = -1
+Exit   	Lock = 1, gModuleLockCount = +2, cSpLockCount = -1, bSignaled = +1
+
+Entered	Lock = 0, gModuleLockCount = +2, cSpLockCount = -1, bSignaled = -1
+Exit   	Lock = 0, gModuleLockCount = +1, cSpLockCount = -1, bSignaled = +255
+
+Entered	Lock = 0, gModuleLockCount = +1, cSpLockCount = -1, bSignaled = -1
+Exit   	Lock = 0, gModuleLockCount = -1, cSpLockCount = -1, bSignaled = +255
+
+Entered	Lock = 1, gModuleLockCount = -1, cSpLockCount = -1, bSignaled = -1
+Exit   	Lock = 1, gModuleLockCount = +2, cSpLockCount = -1, bSignaled = +1
+
+Entered	Lock = 0, gModuleLockCount = +2, cSpLockCount = -1, bSignaled = -1
+Exit   	Lock = 0, gModuleLockCount = +1, cSpLockCount = -1, bSignaled = +255
+
+---- here... exit is being called 3 times and going from -1, -2, then -3.. maybe because the wait resets the timer? yep, this is the problem.. CancelTimer doesn't clear the signaled state so the wait is satisfied, CoLockServer(FALSE) is called, returns, the wait is satisfied again and CoLockServer(FALSE) is called again... a solution might be to add a flag that signifies what phase the locking is in, Running, Timer, Shutdown..
+if this is set via Interlocked routines then it should work.. somehow..
+
+
+Entered	Lock = 0, gModuleLockCount = +1, cSpLockCount = -1, bSignaled = -1
+Exit   	Lock = 0, gModuleLockCount = -1, cSpLockCount = -1, bSignaled = +255
+
+Entered	Lock = 0, gModuleLockCount = -1, cSpLockCount = -1, bSignaled = -1
+Exit   	Lock = 0, gModuleLockCount = -2, cSpLockCount = +0, bSignaled = +255
+
+Entered	Lock = 0, gModuleLockCount = -2, cSpLockCount = -1, bSignaled = -1
+Exit   	Lock = 0, gModuleLockCount = -3, cSpLockCount = -1, bSignaled = +255

@@ -1,0 +1,3 @@
+
+DIRS          = FragEng.Dll CoFrag.Dll FragSvx.Exe FragMgx.Exe FragShx.Dll FragExt.Wix
+OPTIONAL_DIRS = 

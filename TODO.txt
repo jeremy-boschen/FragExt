@@ -1,0 +1,378 @@
+
+- Extend the security checks and make it customizable
+
+
+
+#define FXSCL_REQUIRED        0x00000001  // Token must contain SID
+
+#define FXSCL_DUMPSTACK       0x01000000  // Dump the call stack on check success
+#define FXSCL_ASSERT          0x02000000  // Assert on check each success
+#define FXSCL_ASSERT_ONCE     0x04000000  // Assert on check success only one time (sets a bit in base class on assert)
+
+
+#define FXSCL_TYPE_WELLKNOWN  0x10000000
+#define FXSCL_TYPE_AUTHORITY  0x20000000
+#define FXSCL_TYPE_DYNAMIC    0x40000000
+
+
+#define BEGIN_FX_SID_CHECKLIST( _C )                                       \
+   typedef _C __SidCheckClass;                                             \
+   const static CFxObjectRootEx::FX_SID* _GetSidCheckEntries( ) throw() {  \
+      static const CFxObjectRootEx::FX_SID _entries[] = {
+
+#define FX_SID_WELLKNOWN_ENTRY( _F, _D )                                \
+         {(DWORD)((_F)|FXSCL_TYPE_WELLKNOWN), (WELL_KNOWN_SID_TYPE)(_D), {{0,0,0,0,0,0},0}}, 
+
+#define FX_SID_AUTHORITY_ENTRY( _F, _Authority, _Rid ) \
+         {(DWORD)((_F)|FXSCL_TYPE_AUTHORITY), (WELL_KNOWN_SID_TYPE)-1, {_Authority, _Rid}},
+
+#define END_FX_SID_CHECKLIST( ) \
+         {(DWORD)0xFFFFFFFF, (WELL_KNOWN_SID_TYPE)-1, {{0,0,0,0,0,0},0}} \
+      }; \
+      return ( _entries ); \
+   }
+
+class ATL_NO_VTABLE CTest : public CFxObjectRootEx<CTest, CComObjectRootEx<CComMultiThreadModel> >
+{
+   /* ATL */
+public:
+   BEGIN_COM_MAP(CTest)
+   END_COM_MAP()
+
+   /* CFxObjectRootEx */
+protected:
+   BEGIN_FX_SID_CHECKLIST(CTest)
+      FX_SID_WELLKNOWN_ENTRY(FXSCL_REQUIRED|FXSCL_DUMPSTACK, WinLocalSystemSid)
+      FX_SID_AUTHORITY_ENTRY(FXSCL_REQUIRED|FXSCL_DUMPSTACK, SECURITY_NT_AUTHORITY, SECURITY_PROXY_RID)
+   END_FX_SID_CHECKLIST()
+};
+
+
+CCoHeapObjectT<class CCoClassFactory>::AddRef	this = 0x000000000117FFA0, ReferenceCount = 1         
+CCoHeapObjectT<class CCoClassFactory>::AddRef	this = 0x000000000117FFA0, ReferenceCount = 1         
+CCoHeapObjectT<class CCoClassFactory>::Release	this = 0x000000000117FFA0, ReferenceCount = 1         
+QIThunk - 1         	AddRef  :	Object = 0x0000000000312E60	Refcount = 1	CTaskManager - {1B31293C-CE09-41EC-A9D0-42E5ACE26597}
+CTaskManager - {1B31293C-CE09-41EC-A9D0-42E5ACE26597}
+QIThunk - 2         	AddRef  :	Object = 0x0000000000315520	Refcount = 1	CComClassFactory - IUnknown
+CComClassFactory - IUnknown
+QIThunk - 2         	AddRef  :	Object = 0x0000000000315520	Refcount = 2	CComClassFactory - IUnknown
+QIThunk - 2         	Release :	Object = 0x0000000000315520	Refcount = 1	CComClassFactory - IUnknown
+CCoHeapObjectT<class CCoClassFactory>::AddRef	this = 0x000000000117FFA0, ReferenceCount = 1         
+CCoHeapObjectT<class CCoClassFactory>::AddRef	this = 0x000000000117FFA0, ReferenceCount = 1         
+CCoHeapObjectT<class CCoClassFactory>::QueryInterface	this = 0x000000000117FFA0, success, {00000001-0000-0000-C000-000000000046} - IID_IClassFactory
+CCoHeapObjectT<class CCoClassFactory>::Release	this = 0x000000000117FFA0, ReferenceCount = 1         
+
+	gServerLockCount = 1, cSpLockCount = 4771424, Signaled = 0
+
+CCoHeapObjectT<class CFSxServiceManager>::AddRef	this = 0x000000000117EE50, ReferenceCount = 2         
+CCoHeapObjectT<class CFSxServiceManager>::QueryInterface	this = 0x000000000117EE50, success, {00000000-0000-0000-C000-000000000046} - IID_IUnknown
+CCoHeapObjectT<class CFSxServiceManager>::AddRef	this = 0x000000000117EE50, ReferenceCount = 2         
+CCoHeapObjectT<class CFSxServiceManager>::QueryInterface	this = 0x000000000117EE50, failure, {00000003-0000-0000-C000-000000000046} - IID_IMarshal
+CCoHeapObjectT<class CFSxServiceManager>::AddRef	this = 0x000000000117EE50, ReferenceCount = 3         
+CCoHeapObjectT<class CFSxServiceManager>::QueryInterface	this = 0x000000000117EE50, success, {00000000-0000-0000-C000-000000000046} - IID_IUnknown
+CCoHeapObjectT<class CFSxServiceManager>::AddRef	this = 0x000000000117EE50, ReferenceCount = 4         
+CCoHeapObjectT<class CFSxServiceManager>::QueryInterface	this = 0x000000000117EE50, failure, {00000018-0000-0000-C000-000000000046} - IID_IStdMarshalInfo
+CCoHeapObjectT<class CFSxServiceManager>::QueryInterface	this = 0x000000000117EE50, failure, {00000019-0000-0000-C000-000000000046} - IID_IExternalConnection
+CCoHeapObjectT<class CFSxServiceManager>::Release	this = 0x000000000117EE50, ReferenceCount = 3         
+CCoHeapObjectT<class CFSxServiceManager>::AddRef	this = 0x000000000117EE50, ReferenceCount = 4         
+CCoHeapObjectT<class CFSxServiceManager>::QueryInterface	this = 0x000000000117EE50, success, {6D5140C1-7436-11CE-8034-00AA006009FA} - IID_IServiceProvider
+CCoHeapObjectT<class CFSxServiceManager>::AddRef	this = 0x000000000117EE50, ReferenceCount = 5         
+CCoHeapObjectT<class CFSxServiceManager>::QueryInterface	this = 0x000000000117EE50, success, {6D5140C1-7436-11CE-8034-00AA006009FA} - IID_IServiceProvider
+CCoHeapObjectT<class CFSxServiceManager>::Release	this = 0x000000000117EE50, ReferenceCount = 4         
+CCoHeapObjectT<class CFSxServiceManager>::Release	this = 0x000000000117EE50, ReferenceCount = 3         
+CCoHeapObjectT<class CCoClassFactory>::Release	this = 0x000000000117FFA0, ReferenceCount = 1         
+CCoHeapObjectT<class CFSxServiceManager>::QueryInterface	this = 0x000000000117EE50, failure, {1C733A30-2A1C-11CE-ADE5-00AA0044773D} - IID_ICallFactory
+
+	gServerLockCount = 2, cSpLockCount = -135263840, Signaled = 254
+
+CCoHeapObjectT<class CFSxDefragmenter>::AddRef	this = 0x000000000117EEA0, ReferenceCount = 2         
+CCoHeapObjectT<class CFSxDefragmenter>::QueryInterface	this = 0x000000000117EEA0, success, {0A1CA5C0-00DF-43CF-A2BD-95118EB5196D} - IFSxFileDefragmenter
+CCoHeapObjectT<class CFSxDefragmenter>::QueryInterface	this = 0x000000000117EEA0, failure, {00000003-0000-0000-C000-000000000046} - IID_IMarshal
+CCoHeapObjectT<class CFSxDefragmenter>::QueryInterface	this = 0x000000000117EEA0, failure, {00000003-0000-0000-C000-000000000046} - IID_IMarshal
+CCoHeapObjectT<class CFSxDefragmenter>::AddRef	this = 0x000000000117EEA0, ReferenceCount = 2         
+CCoHeapObjectT<class CFSxDefragmenter>::QueryInterface	this = 0x000000000117EEA0, success, {00000000-0000-0000-C000-000000000046} - IID_IUnknown
+CCoHeapObjectT<class CFSxDefragmenter>::AddRef	this = 0x000000000117EEA0, ReferenceCount = 3         
+CCoHeapObjectT<class CFSxDefragmenter>::QueryInterface	this = 0x000000000117EEA0, failure, {00000018-0000-0000-C000-000000000046} - IID_IStdMarshalInfo
+CCoHeapObjectT<class CFSxDefragmenter>::QueryInterface	this = 0x000000000117EEA0, failure, {00000019-0000-0000-C000-000000000046} - IID_IExternalConnection
+CCoHeapObjectT<class CFSxDefragmenter>::Release	this = 0x000000000117EEA0, ReferenceCount = 2         
+CCoHeapObjectT<class CFSxDefragmenter>::AddRef	this = 0x000000000117EEA0, ReferenceCount = 3         
+CCoHeapObjectT<class CFSxDefragmenter>::QueryInterface	this = 0x000000000117EEA0, success, {0A1CA5C0-00DF-43CF-A2BD-95118EB5196D} - IFSxFileDefragmenter
+CCoHeapObjectT<class CFSxDefragmenter>::AddRef	this = 0x000000000117EEA0, ReferenceCount = 4         
+CCoHeapObjectT<class CFSxDefragmenter>::Release	this = 0x000000000117EEA0, ReferenceCount = 3         
+CCoHeapObjectT<class CFSxServiceManager>::Release	this = 0x000000000117EE50, ReferenceCount = 2         
+CCoHeapObjectT<class CFSxServiceManager>::Release	this = 0x000000000117EE50, ReferenceCount = 1         
+
+	gServerLockCount = 1, cSpLockCount = 0, Signaled = 0
+
+CCoHeapObjectT<class CFSxServiceManager>::Release	this = 0x000000000117EE50, ReferenceCount = 0         
+CTaskManager - {00000003-0000-0000-C000-000000000046} - failed
+CTaskManager - {00000003-0000-0000-C000-000000000046} - failed
+CTaskManager - {0000001B-0000-0000-C000-000000000046} - failed
+QIThunk - 3         	AddRef  :	Object = 0x0000000000312E68	Refcount = 1	CTaskManager - IUnknown
+CTaskManager - IUnknown
+QIThunk - 3         	AddRef  :	Object = 0x0000000000312E68	Refcount = 2	CTaskManager - IUnknown
+CTaskManager - {00000018-0000-0000-C000-000000000046} - failed
+CTaskManager - {00000019-0000-0000-C000-000000000046} - failed
+CTaskManager - {4C1E39E1-E3E3-4296-AA86-EC938D896E92} - failed
+QIThunk - 3         	Release :	Object = 0x0000000000312E68	Refcount = 1	CTaskManager - IUnknown
+CCoHeapObjectT<class CFSxDefragmenter>::QueryInterface	this = 0x000000000117EEA0, failure, {1C733A30-2A1C-11CE-ADE5-00AA0044773D} - IID_ICallFactory
+CCoHeapObjectT<class CFSxDefragmenter>::AddRef	this = 0x000000000117EEA0, ReferenceCount = 4         
+CCoHeapObjectT<class CFSxDefragmenter>::QueryInterface	this = 0x000000000117EEA0, success, {0A1CA5C0-00DF-43CF-A2BD-95118EB5196D} - IFSxFileDefragmenter
+QIThunk - 4         	AddRef  :	Object = 0x0000000000312E68	Refcount = 1	CTaskManager - IFSxFileDefragmenter
+CTaskManager - IFSxFileDefragmenter
+QIThunk - 3         	AddRef  :	Object = 0x0000000000312E68	Refcount = 2	CTaskManager - IUnknown
+RETRIEVAL_POINTERS_BUFFER(0000000001056A30) - ExtentCount:1 StartingVcn:0
+	Extent:0        VCN:371      LCN:364225 to 364596   Clusters:371
+Total clusters:371 Allocated clusters: 371
+CTaskManager - {1C733A30-2A1C-11CE-ADE5-00AA0044773D} - failed
+QIThunk - 5         	AddRef  :	Object = 0x0000000000312E68	Refcount = 1	CTaskManager - IFSxFileDefragmenter
+CTaskManager - IFSxFileDefragmenter
+frageng.cpp(1345):FpiLocateFreeClusterRange!Clusters required=371
+frageng.cpp(1610):DbgPrintBitMap!BitMap=0x009fe428, Elements=262144, Total=8388608, Clear=4014290, Set=4374318, Longest=3206945, Buffer=@0x01e20080
+CCoHeapObjectT<class CFSxDefragmenter>::Release	this = 0x000000000117EEA0, ReferenceCount = 3         
+CCoHeapObjectT<class CFSxDefragmenter>::Release	this = 0x000000000117EEA0, ReferenceCount = 2         
+CCoHeapObjectT<class CFSxDefragmenter>::Release	this = 0x000000000117EEA0, ReferenceCount = 1         
+QIThunk - 4         	Release :	Object = 0x0000000000312E68	Refcount = 0	CTaskManager - IFSxFileDefragmenter
+QIThunk - 5         	Release :	Object = 0x0000000000312E68	Refcount = 0	CTaskManager - IFSxFileDefragmenter
+QIThunk - 3         	Release :	Object = 0x0000000000312E68	Refcount = 1	CTaskManager - IUnknown
+QIThunk - 3         	Release :	Object = 0x0000000000312E68	Refcount = 0	CTaskManager - IUnknown
+
+	gServerLockCount = 0, cSpLockCount = 4836112, Signaled = 0
+
+CCoHeapObjectT<class CFSxDefragmenter>::Release	this = 0x000000000117EEA0, ReferenceCount = 0         
+CCoHeapObjectT<class CCoClassFactory>::AddRef	this = 0x000000000117FFA0, ReferenceCount = 1         
+CCoHeapObjectT<class CCoClassFactory>::AddRef	this = 0x000000000117FFA0, ReferenceCount = 1         
+CCoHeapObjectT<class CCoClassFactory>::QueryInterface	this = 0x000000000117FFA0, success, {00000001-0000-0000-C000-000000000046} - IID_IClassFactory
+CCoHeapObjectT<class CCoClassFactory>::Release	this = 0x000000000117FFA0, ReferenceCount = 1         
+
+	gServerLockCount = 1, cSpLockCount = 4821104, Signaled = 0
+
+CCoHeapObjectT<class CFSxServiceManager>::AddRef	this = 0x000000000117EF20, ReferenceCount = 2         
+CCoHeapObjectT<class CFSxServiceManager>::QueryInterface	this = 0x000000000117EF20, success, {00000000-0000-0000-C000-000000000046} - IID_IUnknown
+CCoHeapObjectT<class CFSxServiceManager>::AddRef	this = 0x000000000117EF20, ReferenceCount = 2         
+CCoHeapObjectT<class CFSxServiceManager>::QueryInterface	this = 0x000000000117EF20, failure, {00000003-0000-0000-C000-000000000046} - IID_IMarshal
+CCoHeapObjectT<class CFSxServiceManager>::AddRef	this = 0x000000000117EF20, ReferenceCount = 3         
+CCoHeapObjectT<class CFSxServiceManager>::QueryInterface	this = 0x000000000117EF20, success, {00000000-0000-0000-C000-000000000046} - IID_IUnknown
+CCoHeapObjectT<class CFSxServiceManager>::AddRef	this = 0x000000000117EF20, ReferenceCount = 4         
+CCoHeapObjectT<class CFSxServiceManager>::QueryInterface	this = 0x000000000117EF20, failure, {00000018-0000-0000-C000-000000000046} - IID_IStdMarshalInfo
+CCoHeapObjectT<class CFSxServiceManager>::QueryInterface	this = 0x000000000117EF20, failure, {00000019-0000-0000-C000-000000000046} - IID_IExternalConnection
+CCoHeapObjectT<class CFSxServiceManager>::Release	this = 0x000000000117EF20, ReferenceCount = 3         
+CCoHeapObjectT<class CFSxServiceManager>::AddRef	this = 0x000000000117EF20, ReferenceCount = 4         
+CCoHeapObjectT<class CFSxServiceManager>::QueryInterface	this = 0x000000000117EF20, success, {6D5140C1-7436-11CE-8034-00AA006009FA} - IID_IServiceProvider
+CCoHeapObjectT<class CFSxServiceManager>::AddRef	this = 0x000000000117EF20, ReferenceCount = 5         
+CCoHeapObjectT<class CFSxServiceManager>::QueryInterface	this = 0x000000000117EF20, success, {6D5140C1-7436-11CE-8034-00AA006009FA} - IID_IServiceProvider
+CCoHeapObjectT<class CFSxServiceManager>::Release	this = 0x000000000117EF20, ReferenceCount = 4         
+CCoHeapObjectT<class CFSxServiceManager>::Release	this = 0x000000000117EF20, ReferenceCount = 3         
+CCoHeapObjectT<class CCoClassFactory>::Release	this = 0x000000000117FFA0, ReferenceCount = 1         
+CCoHeapObjectT<class CFSxServiceManager>::QueryInterface	this = 0x000000000117EF20, failure, {1C733A30-2A1C-11CE-ADE5-00AA0044773D} - IID_ICallFactory
+
+	gServerLockCount = 2, cSpLockCount = -135263840, Signaled = 254
+
+CCoHeapObjectT<class CFSxDefragmenter>::AddRef	this = 0x0000000001316C70, ReferenceCount = 2         
+CCoHeapObjectT<class CFSxDefragmenter>::QueryInterface	this = 0x0000000001316C70, success, {0A1CA5C0-00DF-43CF-A2BD-95118EB5196D} - IFSxFileDefragmenter
+CCoHeapObjectT<class CFSxDefragmenter>::QueryInterface	this = 0x0000000001316C70, failure, {00000003-0000-0000-C000-000000000046} - IID_IMarshal
+CCoHeapObjectT<class CFSxDefragmenter>::QueryInterface	this = 0x0000000001316C70, failure, {00000003-0000-0000-C000-000000000046} - IID_IMarshal
+CCoHeapObjectT<class CFSxDefragmenter>::AddRef	this = 0x0000000001316C70, ReferenceCount = 2         
+CCoHeapObjectT<class CFSxDefragmenter>::QueryInterface	this = 0x0000000001316C70, success, {00000000-0000-0000-C000-000000000046} - IID_IUnknown
+CCoHeapObjectT<class CFSxDefragmenter>::AddRef	this = 0x0000000001316C70, ReferenceCount = 3         
+CCoHeapObjectT<class CFSxDefragmenter>::QueryInterface	this = 0x0000000001316C70, failure, {00000018-0000-0000-C000-000000000046} - IID_IStdMarshalInfo
+CCoHeapObjectT<class CFSxDefragmenter>::QueryInterface	this = 0x0000000001316C70, failure, {00000019-0000-0000-C000-000000000046} - IID_IExternalConnection
+CCoHeapObjectT<class CFSxDefragmenter>::Release	this = 0x0000000001316C70, ReferenceCount = 2         
+CCoHeapObjectT<class CFSxDefragmenter>::AddRef	this = 0x0000000001316C70, ReferenceCount = 3         
+CCoHeapObjectT<class CFSxDefragmenter>::QueryInterface	this = 0x0000000001316C70, success, {0A1CA5C0-00DF-43CF-A2BD-95118EB5196D} - IFSxFileDefragmenter
+CCoHeapObjectT<class CFSxDefragmenter>::AddRef	this = 0x0000000001316C70, ReferenceCount = 4         
+CCoHeapObjectT<class CFSxDefragmenter>::Release	this = 0x0000000001316C70, ReferenceCount = 3         
+CCoHeapObjectT<class CFSxServiceManager>::Release	this = 0x000000000117EF20, ReferenceCount = 2         
+CCoHeapObjectT<class CFSxServiceManager>::Release	this = 0x000000000117EF20, ReferenceCount = 1         
+
+	gServerLockCount = 1, cSpLockCount = 0, Signaled = 0
+
+CCoHeapObjectT<class CFSxServiceManager>::Release	this = 0x000000000117EF20, ReferenceCount = 0         
+CTaskManager - {00000003-0000-0000-C000-000000000046} - failed
+CTaskManager - {00000003-0000-0000-C000-000000000046} - failed
+CTaskManager - {0000001B-0000-0000-C000-000000000046} - failed
+QIThunk - 6         	AddRef  :	Object = 0x0000000000312E68	Refcount = 1	CTaskManager - IUnknown
+CTaskManager - IUnknown
+QIThunk - 6         	AddRef  :	Object = 0x0000000000312E68	Refcount = 2	CTaskManager - IUnknown
+CTaskManager - {00000018-0000-0000-C000-000000000046} - failed
+CTaskManager - {00000019-0000-0000-C000-000000000046} - failed
+CTaskManager - {4C1E39E1-E3E3-4296-AA86-EC938D896E92} - failed
+QIThunk - 6         	Release :	Object = 0x0000000000312E68	Refcount = 1	CTaskManager - IUnknown
+CCoHeapObjectT<class CFSxDefragmenter>::QueryInterface	this = 0x0000000001316C70, failure, {1C733A30-2A1C-11CE-ADE5-00AA0044773D} - IID_ICallFactory
+CCoHeapObjectT<class CFSxDefragmenter>::AddRef	this = 0x0000000001316C70, ReferenceCount = 4         
+CCoHeapObjectT<class CFSxDefragmenter>::QueryInterface	this = 0x0000000001316C70, success, {0A1CA5C0-00DF-43CF-A2BD-95118EB5196D} - IFSxFileDefragmenter
+QIThunk - 7         	AddRef  :	Object = 0x0000000000312E68	Refcount = 1	CTaskManager - IFSxFileDefragmenter
+CTaskManager - IFSxFileDefragmenter
+QIThunk - 6         	AddRef  :	Object = 0x0000000000312E68	Refcount = 2	CTaskManager - IUnknown
+RETRIEVAL_POINTERS_BUFFER(0000000001056A30) - ExtentCount:1 StartingVcn:0
+	Extent:0        VCN:441      LCN:238210 to 238651   Clusters:441
+Total clusters:441 Allocated clusters: 441
+CTaskManager - {1C733A30-2A1C-11CE-ADE5-00AA0044773D} - failed
+QIThunk - 8         	AddRef  :	Object = 0x0000000000312E68	Refcount = 1	CTaskManager - IFSxFileDefragmenter
+CTaskManager - IFSxFileDefragmenter
+frageng.cpp(1345):FpiLocateFreeClusterRange!Clusters required=441
+frageng.cpp(1610):DbgPrintBitMap!BitMap=0x009fe428, Elements=262144, Total=8388608, Clear=4014284, Set=4374324, Longest=3206945, Buffer=@0x01e20080
+CCoHeapObjectT<class CFSxDefragmenter>::Release	this = 0x0000000001316C70, ReferenceCount = 3         
+CCoHeapObjectT<class CFSxDefragmenter>::Release	this = 0x0000000001316C70, ReferenceCount = 2         
+CCoHeapObjectT<class CFSxDefragmenter>::Release	this = 0x0000000001316C70, ReferenceCount = 1         
+QIThunk - 7         	Release :	Object = 0x0000000000312E68	Refcount = 0	CTaskManager - IFSxFileDefragmenter
+QIThunk - 8         	Release :	Object = 0x0000000000312E68	Refcount = 0	CTaskManager - IFSxFileDefragmenter
+QIThunk - 6         	Release :	Object = 0x0000000000312E68	Refcount = 1	CTaskManager - IUnknown
+QIThunk - 6         	Release :	Object = 0x0000000000312E68	Refcount = 0	CTaskManager - IUnknown
+
+	gServerLockCount = 0, cSpLockCount = 4802432, Signaled = 0
+
+CCoHeapObjectT<class CFSxDefragmenter>::Release	this = 0x0000000001316C70, ReferenceCount = 0         
+CCoHeapObjectT<class CCoClassFactory>::AddRef	this = 0x000000000117FFA0, ReferenceCount = 1         
+CCoHeapObjectT<class CCoClassFactory>::AddRef	this = 0x000000000117FFA0, ReferenceCount = 1         
+CCoHeapObjectT<class CCoClassFactory>::QueryInterface	this = 0x000000000117FFA0, success, {00000001-0000-0000-C000-000000000046} - IID_IClassFactory
+CCoHeapObjectT<class CCoClassFactory>::Release	this = 0x000000000117FFA0, ReferenceCount = 1         
+
+	gServerLockCount = 1, cSpLockCount = 4821104, Signaled = 0
+
+CCoHeapObjectT<class CFSxServiceManager>::AddRef	this = 0x0000000001316CF0, ReferenceCount = 2         
+CCoHeapObjectT<class CFSxServiceManager>::QueryInterface	this = 0x0000000001316CF0, success, {00000000-0000-0000-C000-000000000046} - IID_IUnknown
+CCoHeapObjectT<class CFSxServiceManager>::AddRef	this = 0x0000000001316CF0, ReferenceCount = 2         
+CCoHeapObjectT<class CFSxServiceManager>::QueryInterface	this = 0x0000000001316CF0, failure, {00000003-0000-0000-C000-000000000046} - IID_IMarshal
+CCoHeapObjectT<class CFSxServiceManager>::AddRef	this = 0x0000000001316CF0, ReferenceCount = 3         
+CCoHeapObjectT<class CFSxServiceManager>::QueryInterface	this = 0x0000000001316CF0, success, {00000000-0000-0000-C000-000000000046} - IID_IUnknown
+CCoHeapObjectT<class CFSxServiceManager>::AddRef	this = 0x0000000001316CF0, ReferenceCount = 4         
+CCoHeapObjectT<class CFSxServiceManager>::QueryInterface	this = 0x0000000001316CF0, failure, {00000018-0000-0000-C000-000000000046} - IID_IStdMarshalInfo
+CCoHeapObjectT<class CFSxServiceManager>::QueryInterface	this = 0x0000000001316CF0, failure, {00000019-0000-0000-C000-000000000046} - IID_IExternalConnection
+CCoHeapObjectT<class CFSxServiceManager>::Release	this = 0x0000000001316CF0, ReferenceCount = 3         
+CCoHeapObjectT<class CFSxServiceManager>::AddRef	this = 0x0000000001316CF0, ReferenceCount = 4         
+CCoHeapObjectT<class CFSxServiceManager>::QueryInterface	this = 0x0000000001316CF0, success, {6D5140C1-7436-11CE-8034-00AA006009FA} - IID_IServiceProvider
+CCoHeapObjectT<class CFSxServiceManager>::AddRef	this = 0x0000000001316CF0, ReferenceCount = 5         
+CCoHeapObjectT<class CFSxServiceManager>::QueryInterface	this = 0x0000000001316CF0, success, {6D5140C1-7436-11CE-8034-00AA006009FA} - IID_IServiceProvider
+CCoHeapObjectT<class CFSxServiceManager>::Release	this = 0x0000000001316CF0, ReferenceCount = 4         
+CCoHeapObjectT<class CFSxServiceManager>::Release	this = 0x0000000001316CF0, ReferenceCount = 3         
+CCoHeapObjectT<class CCoClassFactory>::Release	this = 0x000000000117FFA0, ReferenceCount = 1         
+CCoHeapObjectT<class CFSxServiceManager>::QueryInterface	this = 0x0000000001316CF0, failure, {1C733A30-2A1C-11CE-ADE5-00AA0044773D} - IID_ICallFactory
+
+	gServerLockCount = 2, cSpLockCount = -135263840, Signaled = 254
+
+CCoHeapObjectT<class CFSxDefragmenter>::AddRef	this = 0x0000000001316D40, ReferenceCount = 2         
+CCoHeapObjectT<class CFSxDefragmenter>::QueryInterface	this = 0x0000000001316D40, success, {0A1CA5C0-00DF-43CF-A2BD-95118EB5196D} - IFSxFileDefragmenter
+CCoHeapObjectT<class CFSxDefragmenter>::QueryInterface	this = 0x0000000001316D40, failure, {00000003-0000-0000-C000-000000000046} - IID_IMarshal
+CCoHeapObjectT<class CFSxDefragmenter>::QueryInterface	this = 0x0000000001316D40, failure, {00000003-0000-0000-C000-000000000046} - IID_IMarshal
+CCoHeapObjectT<class CFSxDefragmenter>::AddRef	this = 0x0000000001316D40, ReferenceCount = 2         
+CCoHeapObjectT<class CFSxDefragmenter>::QueryInterface	this = 0x0000000001316D40, success, {00000000-0000-0000-C000-000000000046} - IID_IUnknown
+CCoHeapObjectT<class CFSxDefragmenter>::AddRef	this = 0x0000000001316D40, ReferenceCount = 3         
+CCoHeapObjectT<class CFSxDefragmenter>::QueryInterface	this = 0x0000000001316D40, failure, {00000018-0000-0000-C000-000000000046} - IID_IStdMarshalInfo
+CCoHeapObjectT<class CFSxDefragmenter>::QueryInterface	this = 0x0000000001316D40, failure, {00000019-0000-0000-C000-000000000046} - IID_IExternalConnection
+CCoHeapObjectT<class CFSxDefragmenter>::Release	this = 0x0000000001316D40, ReferenceCount = 2         
+CCoHeapObjectT<class CFSxDefragmenter>::AddRef	this = 0x0000000001316D40, ReferenceCount = 3         
+CCoHeapObjectT<class CFSxDefragmenter>::QueryInterface	this = 0x0000000001316D40, success, {0A1CA5C0-00DF-43CF-A2BD-95118EB5196D} - IFSxFileDefragmenter
+CCoHeapObjectT<class CFSxDefragmenter>::AddRef	this = 0x0000000001316D40, ReferenceCount = 4         
+CCoHeapObjectT<class CFSxDefragmenter>::Release	this = 0x0000000001316D40, ReferenceCount = 3         
+CCoHeapObjectT<class CFSxServiceManager>::Release	this = 0x0000000001316CF0, ReferenceCount = 2         
+CCoHeapObjectT<class CFSxServiceManager>::Release	this = 0x0000000001316CF0, ReferenceCount = 1         
+
+	gServerLockCount = 1, cSpLockCount = 4781248, Signaled = 0
+
+CCoHeapObjectT<class CFSxServiceManager>::Release	this = 0x0000000001316CF0, ReferenceCount = 0         
+CTaskManager - {00000003-0000-0000-C000-000000000046} - failed
+CTaskManager - {00000003-0000-0000-C000-000000000046} - failed
+CTaskManager - {0000001B-0000-0000-C000-000000000046} - failed
+QIThunk - 9         	AddRef  :	Object = 0x0000000000312E68	Refcount = 1	CTaskManager - IUnknown
+CTaskManager - IUnknown
+QIThunk - 9         	AddRef  :	Object = 0x0000000000312E68	Refcount = 2	CTaskManager - IUnknown
+CTaskManager - {00000018-0000-0000-C000-000000000046} - failed
+CTaskManager - {00000019-0000-0000-C000-000000000046} - failed
+CTaskManager - {4C1E39E1-E3E3-4296-AA86-EC938D896E92} - failed
+QIThunk - 9         	Release :	Object = 0x0000000000312E68	Refcount = 1	CTaskManager - IUnknown
+QIThunk - 10        	AddRef  :	Object = 0x0000000000312E68	Refcount = 1	CTaskManager - IFSxFileDefragmenter
+CTaskManager - IFSxFileDefragmenter
+QIThunk - 9         	AddRef  :	Object = 0x0000000000312E68	Refcount = 2	CTaskManager - IUnknown
+CCoHeapObjectT<class CFSxDefragmenter>::QueryInterface	this = 0x0000000001316D40, failure, {1C733A30-2A1C-11CE-ADE5-00AA0044773D} - IID_ICallFactory
+CCoHeapObjectT<class CFSxDefragmenter>::AddRef	this = 0x0000000001316D40, ReferenceCount = 4         
+CCoHeapObjectT<class CFSxDefragmenter>::QueryInterface	this = 0x0000000001316D40, success, {0A1CA5C0-00DF-43CF-A2BD-95118EB5196D} - IFSxFileDefragmenter
+RETRIEVAL_POINTERS_BUFFER(0000000001056A30) - ExtentCount:1 StartingVcn:0
+	Extent:0        VCN:543      LCN:45119841 to 45120384 Clusters:543
+Total clusters:543 Allocated clusters: 543
+CTaskManager - {1C733A30-2A1C-11CE-ADE5-00AA0044773D} - failed
+QIThunk - 11        	AddRef  :	Object = 0x0000000000312E68	Refcount = 1	CTaskManager - IFSxFileDefragmenter
+CTaskManager - IFSxFileDefragmenter
+frageng.cpp(1345):FpiLocateFreeClusterRange!Clusters required=543
+frageng.cpp(1610):DbgPrintBitMap!BitMap=0x0154e488, Elements=262144, Total=8388608, Clear=4014284, Set=4374324, Longest=3206945, Buffer=@0x01e20080
+RETRIEVAL_POINTERS_BUFFER(0000000001056A30) - ExtentCount:1 StartingVcn:0
+	Extent:0        VCN:735      LCN:3160320 to 3161055  Clusters:735
+Total clusters:735 Allocated clusters: 735
+frageng.cpp(1345):FpiLocateFreeClusterRange!Clusters required=735
+frageng.cpp(1610):DbgPrintBitMap!BitMap=0x0154e488, Elements=262144, Total=8388608, Clear=4013741, Set=4374867, Longest=3206945, Buffer=@0x01e20080
+
+	gServerLockCount = 0, cSpLockCount = 0, Signaled = 0
+
+RETRIEVAL_POINTERS_BUFFER(0000000001056A30) - ExtentCount:1 StartingVcn:0
+	Extent:0        VCN:371      LCN:40553 to 40924    Clusters:371
+Total clusters:371 Allocated clusters: 371
+frageng.cpp(1345):FpiLocateFreeClusterRange!Clusters required=371
+frageng.cpp(1610):DbgPrintBitMap!BitMap=0x0154e488, Elements=262144, Total=8388608, Clear=4013741, Set=4374867, Longest=3206945, Buffer=@0x01e20080
+RETRIEVAL_POINTERS_BUFFER(0000000001056A30) - ExtentCount:1 StartingVcn:0
+	Extent:0        VCN:387      LCN:317454 to 317841   Clusters:387
+Total clusters:387 Allocated clusters: 387
+frageng.cpp(1345):FpiLocateFreeClusterRange!Clusters required=387
+frageng.cpp(1610):DbgPrintBitMap!BitMap=0x0154e488, Elements=262144, Total=8388608, Clear=4013741, Set=4374867, Longest=3206945, Buffer=@0x01e20080
+RETRIEVAL_POINTERS_BUFFER(0000000001056A30) - ExtentCount:1 StartingVcn:0
+	Extent:0        VCN:415      LCN:210246 to 210661   Clusters:415
+Total clusters:415 Allocated clusters: 415
+frageng.cpp(1345):FpiLocateFreeClusterRange!Clusters required=415
+frageng.cpp(1610):DbgPrintBitMap!BitMap=0x0154e488, Elements=262144, Total=8388608, Clear=4013741, Set=4374867, Longest=3206945, Buffer=@0x01e20080
+RETRIEVAL_POINTERS_BUFFER(0000000001056A30) - ExtentCount:1 StartingVcn:0
+	Extent:0        VCN:421      LCN:237789 to 238210   Clusters:421
+Total clusters:421 Allocated clusters: 421
+frageng.cpp(1345):FpiLocateFreeClusterRange!Clusters required=421
+frageng.cpp(1610):DbgPrintBitMap!BitMap=0x0154e488, Elements=262144, Total=8388608, Clear=4013741, Set=4374867, Longest=3206945, Buffer=@0x01e20080
+RETRIEVAL_POINTERS_BUFFER(0000000001056A30) - ExtentCount:1 StartingVcn:0
+	Extent:0        VCN:441      LCN:364225 to 364666   Clusters:441
+Total clusters:441 Allocated clusters: 441
+frageng.cpp(1345):FpiLocateFreeClusterRange!Clusters required=441
+frageng.cpp(1610):DbgPrintBitMap!BitMap=0x0154e488, Elements=262144, Total=8388608, Clear=4013741, Set=4374867, Longest=3206945, Buffer=@0x01e20080
+RETRIEVAL_POINTERS_BUFFER(0000000001056A30) - ExtentCount:1 StartingVcn:0
+	Extent:0        VCN:449      LCN:317841 to 318290   Clusters:449
+Total clusters:449 Allocated clusters: 449
+frageng.cpp(1345):FpiLocateFreeClusterRange!Clusters required=449
+frageng.cpp(1610):DbgPrintBitMap!BitMap=0x0154e488, Elements=262144, Total=8388608, Clear=4013741, Set=4374867, Longest=3206945, Buffer=@0x01e20080
+RETRIEVAL_POINTERS_BUFFER(0000000001056A30) - ExtentCount:1 StartingVcn:0
+	Extent:0        VCN:543      LCN:238210 to 238753   Clusters:543
+Total clusters:543 Allocated clusters: 543
+frageng.cpp(1345):FpiLocateFreeClusterRange!Clusters required=543
+frageng.cpp(1610):DbgPrintBitMap!BitMap=0x0154e488, Elements=262144, Total=8388608, Clear=4013741, Set=4374867, Longest=3206945, Buffer=@0x01e20080
+RETRIEVAL_POINTERS_BUFFER(0000000001056A30) - ExtentCount:1 StartingVcn:0
+	Extent:0        VCN:551      LCN:291776 to 292327   Clusters:551
+Total clusters:551 Allocated clusters: 551
+frageng.cpp(1345):FpiLocateFreeClusterRange!Clusters required=551
+frageng.cpp(1610):DbgPrintBitMap!BitMap=0x0154e488, Elements=262144, Total=8388608, Clear=4013741, Set=4374867, Longest=3206945, Buffer=@0x01e20080
+d:\projects\programming\active\fragext.wdk\fragsvx.exe\comlib.cpp(210) : Assertion failed: -2 == gServerLockCount
+
+	gServerLockCount = -1, cSpLockCount = 0, Signaled = 0
+
+CCoHeapObjectT<class CCoClassFactory>::QueryInterface	this = 0x000000000117FFA0, failure, {00000003-0000-0000-C000-000000000046} - IID_IMarshal
+CCoHeapObjectT<class CCoClassFactory>::AddRef	this = 0x000000000117FFA0, ReferenceCount = 1         
+CCoHeapObjectT<class CCoClassFactory>::QueryInterface	this = 0x000000000117FFA0, success, {00000000-0000-0000-C000-000000000046} - IID_IUnknown
+CCoHeapObjectT<class CCoClassFactory>::Release	this = 0x000000000117FFA0, ReferenceCount = 1         
+CCoHeapObjectT<class CCoClassFactory>::Release	this = 0x000000000117FFA0, ReferenceCount = 1         
+d:\projects\programming\active\fragext.wdk\fragmgx.exe\taskmgr.cpp(804) : Assertion failed: (((HRESULT)(hr)) >= 0) || (((hr) & 0xFFFF) == 1223L) || (((hr) & 0xFFFF) == 112L) || (((hr) & 0xFFFF) == 32L)
+QIThunk - 10        	Release :	Object = 0x0000000000312E68	Refcount = 0	CTaskManager - IFSxFileDefragmenter
+QIThunk - 11        	Release :	Object = 0x0000000000312E68	Refcount = 0	CTaskManager - IFSxFileDefragmenter
+QIThunk - 9         	Release :	Object = 0x0000000000312E68	Refcount = 1	CTaskManager - IUnknown
+QIThunk - 9         	Release :	Object = 0x0000000000312E68	Refcount = 0	CTaskManager - IUnknown
+CCoHeapObjectT<class CFSxDefragmenter>::Release	this = 0x0000000001316D40, ReferenceCount = 3         
+CCoHeapObjectT<class CFSxDefragmenter>::Release	this = 0x0000000001316D40, ReferenceCount = 2         
+CCoHeapObjectT<class CFSxDefragmenter>::Release	this = 0x0000000001316D40, ReferenceCount = 1         
+
+	gServerLockCount = -2, cSpLockCount = 4781248, Signaled = 0
+
+CCoHeapObjectT<class CFSxDefragmenter>::Release	this = 0x0000000001316D40, ReferenceCount = 0         
+Detected memory leaks!
+Dumping objects ->
+d:\projects\programming\active\fragext.wdk\fragsvx.exe\comlib.h(356) : {18} normal block at 0x000000000117FFA0, 24 bytes long.
+ Data: <                > F8 98 A2 00 00 00 00 00 00 00 00 00 00 00 00 00 
+Object dump complete.
+Detected memory leaks!
+Dumping objects ->
+d:\projects\programming\active\fragext.wdk\fragsvx.exe\comlib.h(356) : {18} normal block at 0x000000000117FFA0, 24 bytes long.
+ Data: <                > F8 98 A2 00 00 00 00 00 00 00 00 00 00 00 00 00 
+Object dump complete.
+d:\projects\programming\active\fragext.wdk\fragmgx.exe\taskmgr.cpp(804) : Assertion failed: (((HRESULT)(hr)) >= 0) || (((hr) & 0xFFFF) == 1223L) || (((hr) & 0xFFFF) == 112L) || (((hr) & 0xFFFF) == 32L)
+d:\projects\programming\active\fragext.wdk\fragmgx.exe\taskmgr.cpp(804) : Assertion failed: (((HRESULT)(hr)) >= 0) || (((hr) & 0xFFFF) == 1223L) || (((hr) & 0xFFFF) == 112L) || (((hr) & 0xFFFF) == 32L)

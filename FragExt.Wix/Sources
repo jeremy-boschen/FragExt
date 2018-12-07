@@ -1,0 +1,21 @@
+
+BUILD_PRODUCES = FragExt.Wix
+BUILD_CONSUMES = FragEng.Dll CoFrag.Dll FragShx.Dll FragMgx.Exe FragSvx.Exe
+
+TARGETTYPE     = NOTARGET
+TARGETNAME     = FragExt-Setup-$(_BUILDARCH:AMD64=x64)
+TARGETEXT      = msi
+
+WIX_CULTURES   = en-us
+WIXL_FLAGS     = $(WIXL_FLAGS) -cultures:en-us
+
+NTTARGETFILE0  = CustomPreBuild_Target
+NTTARGETFILE1  = CustomBuild_Target
+NTTARGETFILE2  = CustomPostBuild_Target
+
+# This is needed for building from the top directory because the custom WiX make 
+# commands will try to use output that hasn't completed yet, so this must run last
+SYNCHRONIZE_PASS2_DRAIN = 1
+
+SOURCES = \
+   FragExt.wxs

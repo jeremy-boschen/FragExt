@@ -1,0 +1,44 @@
+
+/////////////////////////////////////////////////////////////////////////////
+//
+// Version
+//
+
+VS_VERSION_INFO VERSIONINFO
+ FILEVERSION PRODUCTVERSIONNUMBER
+ PRODUCTVERSION PRODUCTVERSIONNUMBER
+ FILEFLAGSMASK 0x3fL
+#ifdef _DEBUG
+ FILEFLAGS 0x1L
+#else /* DBG */
+ FILEFLAGS 0x0L
+#endif /* _DEBUG */
+ FILEOS 0x4L
+ FILETYPE 0x1L
+ FILESUBTYPE 0x0L
+BEGIN
+    BLOCK "StringFileInfo"
+    BEGIN
+        BLOCK "040904e4"
+        BEGIN
+            VALUE "CompanyName", "Jeremy Boschen"
+            VALUE "FileDescription", "FragExt Service"
+            VALUE "FileVersion", PRODUCTVERSIONSTRING
+            VALUE "LegalCopyright", PRODUCTCOPYRIGHTSTRING
+            VALUE "InternalName", "FragSvx.exe"
+            VALUE "OriginalFilename", "FragSvx.exe"
+            VALUE "ProductName", "FragSvx"
+            VALUE "ProductVersion", PRODUCTVERSIONSTRING
+        END
+    END
+    BLOCK "VarFileInfo"
+    BEGIN
+		VALUE "Translation", 0x0409, 1200
+    END
+END
+
+/////////////////////////////////////////////////////////////////////////////
+//
+// TYPELIB
+//
+1                       TYPELIB                 "FragSvx.tlb"

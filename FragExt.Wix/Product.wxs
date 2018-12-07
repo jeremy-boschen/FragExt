@@ -1,0 +1,23 @@
+<?xml version="1.0" ?>
+<Wix xmlns="http://schemas.microsoft.com/wix/2003/01/wi">
+    <Product Id="F0C9255A-C856-4421-BAF2-ACC6182E23C6" Name="FragExt" Language="1033" Version="1.0.724.3342"
+        Manufacturer="Jeremy Boschen">
+        <Package Id="C1284254-9E5B-48A8-A44E-DA29C38B8868" Description="FragExt Defragmentation Utilities"
+            Comments="Updates available at http://www.mutexed.com/code/FragExt/" InstallerVersion="200"
+            Compressed="yes" />
+        <Media Id="1" Cabinet="Product.cab" EmbedCab="yes" />
+        <Directory Id="TARGETDIR" Name="SourceDir">
+            <Directory Id="ProgramFilesFolder">
+                <Directory Id="INSTALLLOCATION" Name="FragExt" LongName="FragExt">
+                    <Component Id="FragExt" Guid="4AA01E1C-BD99-464e-8298-424A5E90A1DF">
+                        <!-- TODO: Insert your files, registry keys, and other resources here. -->
+                        <File Id="history" Name="History.txt" DiskId="1" src="History.txt" />
+                    </Component>
+                </Directory>
+            </Directory>
+        </Directory>
+        <Feature Id="ProductFeature" Title="FragExt" Level="1">
+            <ComponentRef Id="FragExt" />
+        </Feature>
+    </Product>
+</Wix>

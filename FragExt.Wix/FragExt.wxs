@@ -1,0 +1,387 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<Wix xmlns="http://schemas.microsoft.com/wix/2006/wi" xmlns:Util="http://schemas.microsoft.com/wix/UtilExtension">
+   <?include Version.wxi?>
+
+<?if $(var._BUILDARCH) = x86?>
+   <?define var.Platform=Intel?>
+   <?define var.IsWin64=no?>
+   <?define var.TypeKey=win32?>
+   <?define var.UpgradeCode=DABFF6A4-7210-4EE2-92F6-5738358AE9AA?>
+   <?define var.ProgramsDirectory=ProgramFilesFolder?>
+   <?define var.SystemDirectory=SystemFolder?>
+<?elseif $(var._BUILDARCH) = AMD64?>
+   <?define var.Platform=AMD64?>
+   <?define var.IsWin64=yes?>
+   <?define var.TypeKey=win64?>
+   <?define var.UpgradeCode=012D6E6E-872C-4BEC-90E2-26643A6FBB50?>
+   <?define var.ProgramsDirectory=ProgramFiles64Folder?>
+   <?define var.SystemDirectory=System64Folder?>
+<?endif?>
+
+   <Product UpgradeCode="$(var.UpgradeCode)" Name="FragExt" Id="*" Version="$(var.ProductVersion)" Manufacturer="Jeremy Boschen" Language="1033">
+
+      <Package Comments="File defragmentation shell extensions" Manufacturer="Jeremy Boschen" InstallerVersion="200" Languages="1033" Compressed="yes" SummaryCodepage="1252" Platforms="$(var.Platform)" />
+<?if $(var.Platform)=AMD64?>
+      <Condition Message="FragExt cannot be installed on this machine because the operating system does not meet the minimum requirements."><![CDATA[VersionNT64]]></Condition>
+<?else?>
+      <Condition Message="FragExt cannot be installed on this machine because the operating system does not meet the minimum requirements."><![CDATA[(VersionNT >= 500) AND (NOT VersionNT64)]]></Condition>
+<?endif?>
+
+      <Upgrade Id="$(var.UpgradeCode)">
+<?if $(var.BUILDENV) = fre?>
+         <UpgradeVersion Property="PREVIOUSVERSIONSINSTALLED" IncludeMinimum="yes" Minimum="0.0.0.0" IncludeMaximum="no" Maximum="$(var.ProductVersion)" OnlyDetect="no" />
+<?else?>
+         <UpgradeVersion Property="PREVIOUSVERSIONSINSTALLED" IncludeMinimum="yes" Minimum="0.0.0.0" IncludeMaximum="yes" Maximum="$(var.ProductVersion)" OnlyDetect="no" />
+<?endif?>
+         <UpgradeVersion Property="NEWVERSIONSINSTALLED" Minimum="$(var.ProductVersion)" OnlyDetect="yes" />
+      </Upgrade>
+      
+<!--$$
+  
+   Application files directory
+   
+$$-->
+      <Directory Id="TARGETDIR" Name="SourceDir">
+         <Directory Id="$(var.ProgramsDirectory)">
+            <Directory Id="Directory.Programs.jBoschen" Name="jBoschen">
+               <Directory Id="INSTALLDIR" Name="FragExt" />
+            </Directory>
+         </Directory>
+
+         <Directory Id="DesktopFolder" Name="DESKTOP" />
+
+         <Directory Id="LocalAppDataFolder" Name="AppData">
+            <Directory Id="Directory.AppData.jBoschen" Name="jBoschen">
+               <Directory Id="Directory.AppData.jBoschen.FragExt" Name="FragExt" />
+            </Directory>
+         </Directory>
+      </Directory>
+
+      <DirectoryRef Id="INSTALLDIR">
+         <Component Id="Component.License.Txt" Guid="FF26D169-0CF4-9347-DCC6-8FC92681C040" KeyPath="yes" Win64="$(var.IsWin64)">
+            <File Id="File.License.Txt" Name="License.txt" Vital="no" DiskId="1" Source=".\..\License.txt" />
+         </Component>
+
+         <Component Id="Component.History.Txt" Guid="29EA3B00-2CCD-0FD1-40A6-B19E1BF4EA87" KeyPath="yes" Win64="$(var.IsWin64)">
+            <File Id="File.History.Txt" Name="History.txt" Vital="no" DiskId="1" Source=".\..\History.txt" />
+         </Component>
+
+         <Component Id="Component.FragMgx.Exe" Guid="E9F9EDB5-38F8-1DC2-5AC7-C5011BD81A5C" KeyPath="yes" Win64="$(var.IsWin64)">
+            <File Id="File.FragMgx.Exe" Name="FragMgx.exe" Vital="yes" DiskId="1" BindPath="" Source=".\..\FragMgx.Exe\$(var.O)\FragMgx.exe" />
+
+            <RegistryValue Action="write" Root="HKLM" Key="SOFTWARE\Classes\AppID\{5B2A3C76-4C9F-4ABF-8E50-D806008C0B47}" Type="string" Value="FragMgx" />
+            <RegistryValue Action="write" Root="HKLM" Key="SOFTWARE\Classes\AppID\FragMgx.exe" Type="string" Name="AppID" Value="{5B2A3C76-4C9F-4ABF-8E50-D806008C0B47}" />
+
+            <RegistryValue Action="write" Root="HKLM" Key="SOFTWARE\Classes\CLSID\{5B2289D9-86CC-46B5-9735-8B9B865C9833}" Type="string" Value="DefragManager" />
+            <RegistryValue Action="write" Root="HKLM" Key="SOFTWARE\Classes\CLSID\{5B2289D9-86CC-46B5-9735-8B9B865C9833}" Type="string" Name="AppID" Value="{5B2A3C76-4C9F-4ABF-8E50-D806008C0B47}" />
+            <RegistryValue Action="write" Root="HKLM" Key="SOFTWARE\Classes\CLSID\{5B2289D9-86CC-46B5-9735-8B9B865C9833}\LocalServer32" Type="string" Value="[#File.FragMgx.Exe]" />
+            <RegistryValue Action="write" Root="HKLM" Key="SOFTWARE\Classes\CLSID\{5B2289D9-86CC-46B5-9735-8B9B865C9833}\TypeLib" Type="string" Value="{C2D860BE-D466-4CA0-98BC-CD34526BD340}" />
+
+            <RegistryValue Action="write" Root="HKLM" Key="SOFTWARE\Classes\Interface\{B572CC24-BAE1-431B-910D-408C3FA21663}\ProxyStubClsid" Type="string" Value="{00020424-0000-0000-C000-000000000046}" />
+            <RegistryValue Action="write" Root="HKLM" Key="SOFTWARE\Classes\Interface\{B572CC24-BAE1-431B-910D-408C3FA21663}\ProxyStubClsid32" Type="string" Value="{00020424-0000-0000-C000-000000000046}" />
+            <RegistryValue Action="write" Root="HKLM" Key="SOFTWARE\Classes\Interface\{B572CC24-BAE1-431B-910D-408C3FA21663}\TypeLib" Type="string" Value="{C2D860BE-D466-4CA0-98BC-CD34526BD340}" />
+            <RegistryValue Action="write" Root="HKLM" Key="SOFTWARE\Classes\Interface\{B572CC24-BAE1-431B-910D-408C3FA21663}\TypeLib" Type="string" Name="Version" Value="1.0" />
+            <RegistryValue Action="write" Root="HKLM" Key="SOFTWARE\Classes\Interface\{B572CC24-BAE1-431B-910D-408C3FA21663}" Type="string" Value="IDefragManager" />
+
+            <RegistryValue Action="write" Root="HKLM" Key="SOFTWARE\Classes\TypeLib\{C2D860BE-D466-4CA0-98BC-CD34526BD340}\1.0\0\$(var.TypeKey)" Type="string" Value="[#File.FragMgx.Exe]" />
+            <RegistryValue Action="write" Root="HKLM" Key="SOFTWARE\Classes\TypeLib\{C2D860BE-D466-4CA0-98BC-CD34526BD340}\1.0\FLAGS" Type="string" Value="0" />
+            <RegistryValue Action="write" Root="HKLM" Key="SOFTWARE\Classes\TypeLib\{C2D860BE-D466-4CA0-98BC-CD34526BD340}\1.0\HELPDIR" Type="string" Value="[$Component.FragMgx.Exe]" />
+            <RegistryValue Action="write" Root="HKLM" Key="SOFTWARE\Classes\TypeLib\{C2D860BE-D466-4CA0-98BC-CD34526BD340}\1.0" Type="string" Value="Defrag Manager" />
+         </Component>
+         
+         <Component Id="Component.FragSvx.Exe" Guid="FDE7EDC8-A60C-4200-9622-4B21A558D78E" KeyPath="no" Win64="$(var.IsWin64)">
+            <File Id="File.FragSvx.Exe" Name="FragSvx.exe" Vital="yes" DiskId="1" KeyPath="yes" BindPath="" Source=".\..\FragSvx.Exe\$(var.O)\FragSvx.exe" />
+
+            <ServiceInstall Id="Service.Install.FragSvx.Exe" Account="LocalSystem" Description="Provides defragmentation support to FragExt" DisplayName="FragExt Defragmenter" ErrorControl="normal" Name="FRAGSVX" Start="demand" Type="ownProcess" Vital="yes">
+               <ServiceDependency Id="RPCSS" />
+            </ServiceInstall>
+            <ServiceControl Id="Service.Control.FragSvx.Exe" Name="FRAGSVX" Remove="uninstall" Stop="both" Wait="yes" />
+
+            <RegistryValue Action="write" Root="HKLM" Key="SOFTWARE\Classes\AppID\FragSvx.exe" Type="string" Name="AppID" Value="{7C1A3EB5-37A0-4BC2-B0E5-F3C5BF1FCB5D}" />
+            <RegistryValue Action="write" Root="HKLM" Key="SOFTWARE\Classes\AppID\{7C1A3EB5-37A0-4BC2-B0E5-F3C5BF1FCB5D}" Type="string" Value="FragSvx" />
+            <RegistryValue Action="write" Root="HKLM" Key="SOFTWARE\Classes\AppID\{7C1A3EB5-37A0-4BC2-B0E5-F3C5BF1FCB5D}" Type="binary" Name="LaunchPermission" Value="010004805c0000006800000000000000140000000200480003000000000014000b000000010100000000000512000000000018000b00000001020000000000052000000020020000000014000b000000010100000000000504000000010100000000000512000000010100000000000512000000" />
+            <RegistryValue Action="write" Root="HKLM" Key="SOFTWARE\Classes\AppID\{7C1A3EB5-37A0-4BC2-B0E5-F3C5BF1FCB5D}" Type="string" Name="LocalService" Value="FragSvx" />
+            
+            <RegistryValue Action="write" Root="HKLM" Key="SOFTWARE\Classes\CLSID\{FE0758EC-102C-4228-BB9F-0AA01DB604CF}" Type="string" Value="FSxServiceManager" />
+            <RegistryValue Action="write" Root="HKLM" Key="SOFTWARE\Classes\CLSID\{FE0758EC-102C-4228-BB9F-0AA01DB604CF}" Type="string" Name="AppID" Value="{7C1A3EB5-37A0-4BC2-B0E5-F3C5BF1FCB5D}" />            
+            <RegistryValue Action="write" Root="HKLM" Key="SOFTWARE\Classes\CLSID\{FE0758EC-102C-4228-BB9F-0AA01DB604CF}\TypeLib" Type="string" Value="{EF69B978-A080-4318-8CD1-8B68F6352421}" />
+
+            <RegistryValue Action="write" Root="HKLM" Key="SOFTWARE\Classes\Interface\{564C10BE-E826-477B-988F-072068A93ADB}\ProxyStubClsid" Type="string" Value="{00020424-0000-0000-C000-000000000046}" />
+            <RegistryValue Action="write" Root="HKLM" Key="SOFTWARE\Classes\Interface\{564C10BE-E826-477B-988F-072068A93ADB}\ProxyStubClsid32" Type="string" Value="{00020424-0000-0000-C000-000000000046}" />
+            <RegistryValue Action="write" Root="HKLM" Key="SOFTWARE\Classes\Interface\{564C10BE-E826-477B-988F-072068A93ADB}\TypeLib" Type="string" Value="{EF69B978-A080-4318-8CD1-8B68F6352421}" />
+            <RegistryValue Action="write" Root="HKLM" Key="SOFTWARE\Classes\Interface\{564C10BE-E826-477B-988F-072068A93ADB}\TypeLib" Type="string" Name="Version" Value="1.0" />
+            <RegistryValue Action="write" Root="HKLM" Key="SOFTWARE\Classes\Interface\{564C10BE-E826-477B-988F-072068A93ADB}" Type="string" Value="IFSxFileDefragmenter" />
+            
+            <RegistryValue Action="write" Root="HKLM" Key="SOFTWARE\Classes\Interface\{D26AF61A-609C-430F-9944-2F9DA30B0D63}\ProxyStubClsid" Type="string" Value="{00020424-0000-0000-C000-000000000046}" />
+            <RegistryValue Action="write" Root="HKLM" Key="SOFTWARE\Classes\Interface\{D26AF61A-609C-430F-9944-2F9DA30B0D63}\ProxyStubClsid32" Type="string" Value="{00020424-0000-0000-C000-000000000046}" />
+            <RegistryValue Action="write" Root="HKLM" Key="SOFTWARE\Classes\Interface\{D26AF61A-609C-430F-9944-2F9DA30B0D63}\TypeLib" Type="string" Value="{EF69B978-A080-4318-8CD1-8B68F6352421}" />
+            <RegistryValue Action="write" Root="HKLM" Key="SOFTWARE\Classes\Interface\{D26AF61A-609C-430F-9944-2F9DA30B0D63}\TypeLib" Type="string" Name="Version" Value="1.0" />
+            <RegistryValue Action="write" Root="HKLM" Key="SOFTWARE\Classes\Interface\{D26AF61A-609C-430F-9944-2F9DA30B0D63}" Type="string" Value="IFSxDefragmentFileCallback" />
+            
+            <RegistryValue Action="write" Root="HKLM" Key="SOFTWARE\Classes\TypeLib\{EF69B978-A080-4318-8CD1-8B68F6352421}\1.0\0\$(var.TypeKey)" Type="string" Value="[#File.FragSvx.Exe]" />
+            <RegistryValue Action="write" Root="HKLM" Key="SOFTWARE\Classes\TypeLib\{EF69B978-A080-4318-8CD1-8B68F6352421}\1.0\FLAGS" Type="string" Value="0" />
+            <RegistryValue Action="write" Root="HKLM" Key="SOFTWARE\Classes\TypeLib\{EF69B978-A080-4318-8CD1-8B68F6352421}\1.0\HELPDIR" Type="string" Value="[$Component.FragSvx.Exe]" />
+            <RegistryValue Action="write" Root="HKLM" Key="SOFTWARE\Classes\TypeLib\{EF69B978-A080-4318-8CD1-8B68F6352421}\1.0" Type="string" Value="FragExt Service" />
+         </Component>
+         
+         <Component Id="Component.CoFrag.Dll" Guid="4EC700C3-CC9B-4946-9F0F-6048E74042CF" KeyPath="yes" Win64="$(var.IsWin64)">
+            <File Id="File.CoFrag.Dll" Name="CoFrag.dll" Vital="yes" DiskId="1" BindPath="" Source=".\..\CoFrag.Dll\$(var.O)\CoFrag.dll" />
+
+            <RegistryValue Action="write" Root="HKLM" Key="SOFTWARE\Classes\AppID\{6D1124CF-BBBC-4866-8F1F-FA52DE7DD008}" Type="string" Value="FragExt" />
+            <RegistryValue Action="write" Root="HKLM" Key="SOFTWARE\Classes\AppID\{6D1124CF-BBBC-4866-8F1F-FA52DE7DD008}" Type="string" Name="DllSurrogate" Value="" />
+            <RegistryValue Action="write" Root="HKLM" Key="SOFTWARE\Classes\AppID\CoFrag.dll" Type="string" Name="AppID" Value="{6D1124CF-BBBC-4866-8F1F-FA52DE7DD008}" />
+
+            <RegistryValue Action="write" Root="HKLM" Key="SOFTWARE\Classes\CLSID\{D5DE6F41-07AE-4DA2-A816-C456DC642185}" Type="string" Value="FragExt.FileFragment" />
+            <RegistryValue Action="write" Root="HKLM" Key="SOFTWARE\Classes\CLSID\{D5DE6F41-07AE-4DA2-A816-C456DC642185}" Type="string" Name="AppID" Value="{6D1124CF-BBBC-4866-8F1F-FA52DE7DD008}" />
+            <RegistryValue Action="write" Root="HKLM" Key="SOFTWARE\Classes\CLSID\{D5DE6F41-07AE-4DA2-A816-C456DC642185}\TypeLib" Type="string" Value="{739FCD59-2B48-4908-B906-43A26C58007D}" />
+            <RegistryValue Action="write" Root="HKLM" Key="SOFTWARE\Classes\CLSID\{D5DE6F41-07AE-4DA2-A816-C456DC642185}\InprocServer32" Type="string" Value="[#File.CoFrag.Dll]" />
+            <RegistryValue Action="write" Root="HKLM" Key="SOFTWARE\Classes\CLSID\{D5DE6F41-07AE-4DA2-A816-C456DC642185}\InprocServer32" Type="string" Name="ThreadingModel" Value="Both" />
+            
+            <RegistryValue Action="write" Root="HKLM" Key="SOFTWARE\Classes\CLSID\{2970890C-BA3B-45F6-A7EC-85606DE2ADB9}" Type="string" Value="FragExt.FileFragments" />
+            <RegistryValue Action="write" Root="HKLM" Key="SOFTWARE\Classes\CLSID\{2970890C-BA3B-45F6-A7EC-85606DE2ADB9}" Type="string" Name="AppID" Value="{6D1124CF-BBBC-4866-8F1F-FA52DE7DD008}" />
+            <RegistryValue Action="write" Root="HKLM" Key="SOFTWARE\Classes\CLSID\{2970890C-BA3B-45F6-A7EC-85606DE2ADB9}\TypeLib" Type="string" Value="{739FCD59-2B48-4908-B906-43A26C58007D}" />
+            <RegistryValue Action="write" Root="HKLM" Key="SOFTWARE\Classes\CLSID\{2970890C-BA3B-45F6-A7EC-85606DE2ADB9}InprocServer32" Type="string" Value="[#File.CoFrag.Dll]" />
+            <RegistryValue Action="write" Root="HKLM" Key="SOFTWARE\Classes\CLSID\{2970890C-BA3B-45F6-A7EC-85606DE2ADB9}InprocServer32" Type="string" Name="ThreadingModel" Value="Both" />
+
+            <RegistryValue Action="write" Root="HKLM" Key="SOFTWARE\Classes\CLSID\{74CCF722-3BA8-4026-8DBE-5282F057E292}" Type="string" Value="FragExt.FileStream" />
+            <RegistryValue Action="write" Root="HKLM" Key="SOFTWARE\Classes\CLSID\{74CCF722-3BA8-4026-8DBE-5282F057E292}" Type="string" Name="AppID" Value="{6D1124CF-BBBC-4866-8F1F-FA52DE7DD008}" />
+            <RegistryValue Action="write" Root="HKLM" Key="SOFTWARE\Classes\CLSID\{74CCF722-3BA8-4026-8DBE-5282F057E292}\TypeLib" Type="string" Value="{739FCD59-2B48-4908-B906-43A26C58007D}" />
+            <RegistryValue Action="write" Root="HKLM" Key="SOFTWARE\Classes\CLSID\{74CCF722-3BA8-4026-8DBE-5282F057E292}InprocServer32" Type="string" Value="[#File.CoFrag.Dll]" />
+            <RegistryValue Action="write" Root="HKLM" Key="SOFTWARE\Classes\CLSID\{74CCF722-3BA8-4026-8DBE-5282F057E292}InprocServer32" Type="string" Name="ThreadingModel" Value="Both" />
+
+            <RegistryValue Action="write" Root="HKLM" Key="SOFTWARE\Classes\CLSID\{C22183C2-84A4-4BB7-B354-73B6998CCC85}" Type="string" Value="FragExt.FileStreams" />
+            <RegistryValue Action="write" Root="HKLM" Key="SOFTWARE\Classes\CLSID\{C22183C2-84A4-4BB7-B354-73B6998CCC85}" Type="string" Name="AppID" Value="{6D1124CF-BBBC-4866-8F1F-FA52DE7DD008}" />
+            <RegistryValue Action="write" Root="HKLM" Key="SOFTWARE\Classes\CLSID\{C22183C2-84A4-4BB7-B354-73B6998CCC85}\TypeLib" Type="string" Value="{739FCD59-2B48-4908-B906-43A26C58007D}" />
+            <RegistryValue Action="write" Root="HKLM" Key="SOFTWARE\Classes\CLSID\{C22183C2-84A4-4BB7-B354-73B6998CCC85}InprocServer32" Type="string" Value="[#File.CoFrag.Dll]" />
+            <RegistryValue Action="write" Root="HKLM" Key="SOFTWARE\Classes\CLSID\{C22183C2-84A4-4BB7-B354-73B6998CCC85}InprocServer32" Type="string" Name="ThreadingModel" Value="Both" />
+            
+            <RegistryValue Action="write" Root="HKLM" Key="SOFTWARE\Classes\CLSID\{D06EDAF1-7E7D-41D7-8D1C-CB31BFD20B97}" Type="string" Value="FragExt.FileDefragmenter" />
+            <RegistryValue Action="write" Root="HKLM" Key="SOFTWARE\Classes\CLSID\{D06EDAF1-7E7D-41D7-8D1C-CB31BFD20B97}" Type="string" Name="AppID" Value="{6D1124CF-BBBC-4866-8F1F-FA52DE7DD008}" />
+            <RegistryValue Action="write" Root="HKLM" Key="SOFTWARE\Classes\CLSID\{D06EDAF1-7E7D-41D7-8D1C-CB31BFD20B97}\TypeLib" Type="string" Value="{739FCD59-2B48-4908-B906-43A26C58007D}" />
+            <RegistryValue Action="write" Root="HKLM" Key="SOFTWARE\Classes\CLSID\{D06EDAF1-7E7D-41D7-8D1C-CB31BFD20B97}\InprocServer32" Type="string" Value="[#File.CoFrag.Dll]" />
+            <RegistryValue Action="write" Root="HKLM" Key="SOFTWARE\Classes\CLSID\{D06EDAF1-7E7D-41D7-8D1C-CB31BFD20B97}\InprocServer32" Type="string" Name="ThreadingModel" Value="Both" />
+
+            <RegistryValue Action="write" Root="HKLM" Key="SOFTWARE\Classes\FragExt.FileDefragmenter\CLSID" Type="string" Value="{D06EDAF1-7E7D-41D7-8D1C-CB31BFD20B97}" />
+            <RegistryValue Action="write" Root="HKLM" Key="SOFTWARE\Classes\FragExt.FileDefragmenter\CLSID" Type="string" Name="LocalizedString" Value="@[#File.CoFrag.Dll],-1" />
+            <RegistryValue Action="write" Root="HKLM" Key="SOFTWARE\Classes\FragExt.FileDefragmenter\CLSID\Elevation" Type="integer" Name="Enabled" Value="1" />
+            <RegistryValue Action="write" Root="HKLM" Key="SOFTWARE\Classes\FragExt.FileFragments\CLSID" Type="string" Value="{2970890C-BA3B-45F6-A7EC-85606DE2ADB9}" />
+            <RegistryValue Action="write" Root="HKLM" Key="SOFTWARE\Classes\FragExt.FileStreams\CLSID" Type="string" Value="{C22183C2-84A4-4BB7-B354-73B6998CCC85}" />
+
+            <RegistryValue Action="write" Root="HKLM" Key="SOFTWARE\Classes\Interface\{0B66D1B3-0769-4CAA-8581-1B6AF1E1FB1B}\ProxyStubClsid" Type="string" Value="{00020424-0000-0000-C000-000000000046}" />               
+            <RegistryValue Action="write" Root="HKLM" Key="SOFTWARE\Classes\Interface\{0B66D1B3-0769-4CAA-8581-1B6AF1E1FB1B}\ProxyStubClsid32" Type="string" Value="{00020424-0000-0000-C000-000000000046}" />
+            <RegistryValue Action="write" Root="HKLM" Key="SOFTWARE\Classes\Interface\{0B66D1B3-0769-4CAA-8581-1B6AF1E1FB1B}\TypeLib" Type="string" Value="{739FCD59-2B48-4908-B906-43A26C58007D}" />
+            <RegistryValue Action="write" Root="HKLM" Key="SOFTWARE\Classes\Interface\{0B66D1B3-0769-4CAA-8581-1B6AF1E1FB1B}\TypeLib" Type="string" Name="Version" Value="1.0" />
+            <RegistryValue Action="write" Root="HKLM" Key="SOFTWARE\Classes\Interface\{0B66D1B3-0769-4CAA-8581-1B6AF1E1FB1B}" Type="string" Value="IFileFragments" />
+            
+            <RegistryValue Action="write" Root="HKLM" Key="SOFTWARE\Classes\Interface\{113B0A4A-AEE5-4899-982D-299774CF0D6C}\ProxyStubClsid" Type="string" Value="{00020424-0000-0000-C000-000000000046}" />
+            <RegistryValue Action="write" Root="HKLM" Key="SOFTWARE\Classes\Interface\{113B0A4A-AEE5-4899-982D-299774CF0D6C}\ProxyStubClsid32" Type="string" Value="{00020424-0000-0000-C000-000000000046}" />
+            <RegistryValue Action="write" Root="HKLM" Key="SOFTWARE\Classes\Interface\{113B0A4A-AEE5-4899-982D-299774CF0D6C}\TypeLib" Type="string" Value="{739FCD59-2B48-4908-B906-43A26C58007D}" />
+            <RegistryValue Action="write" Root="HKLM" Key="SOFTWARE\Classes\Interface\{113B0A4A-AEE5-4899-982D-299774CF0D6C}\TypeLib" Type="string" Name="Version" Value="1.0" />
+            <RegistryValue Action="write" Root="HKLM" Key="SOFTWARE\Classes\Interface\{113B0A4A-AEE5-4899-982D-299774CF0D6C}" Type="string" Value="IFileDefragmenterEvents" />
+            
+            <RegistryValue Action="write" Root="HKLM" Key="SOFTWARE\Classes\Interface\{1D046FDF-FCD7-4AB8-9C21-5FB01B463263}\ProxyStubClsid" Type="string" Value="{00020424-0000-0000-C000-000000000046}" />
+            <RegistryValue Action="write" Root="HKLM" Key="SOFTWARE\Classes\Interface\{1D046FDF-FCD7-4AB8-9C21-5FB01B463263}\ProxyStubClsid32" Type="string" Value="{00020424-0000-0000-C000-000000000046}" />
+            <RegistryValue Action="write" Root="HKLM" Key="SOFTWARE\Classes\Interface\{1D046FDF-FCD7-4AB8-9C21-5FB01B463263}\TypeLib" Type="string" Value="{739FCD59-2B48-4908-B906-43A26C58007D}" />
+            <RegistryValue Action="write" Root="HKLM" Key="SOFTWARE\Classes\Interface\{1D046FDF-FCD7-4AB8-9C21-5FB01B463263}\TypeLib" Type="string" Name="Version" Value="1.0" />
+            <RegistryValue Action="write" Root="HKLM" Key="SOFTWARE\Classes\Interface\{1D046FDF-FCD7-4AB8-9C21-5FB01B463263}" Type="string" Value="IFileFragment" />
+            
+            <RegistryValue Action="write" Root="HKLM" Key="SOFTWARE\Classes\Interface\{3E096844-2F07-41F5-A226-618C26784FA9}\ProxyStubClsid" Type="string" Value="{00020424-0000-0000-C000-000000000046}" />
+            <RegistryValue Action="write" Root="HKLM" Key="SOFTWARE\Classes\Interface\{3E096844-2F07-41F5-A226-618C26784FA9}\ProxyStubClsid32" Type="string" Value="{00020424-0000-0000-C000-000000000046}" />
+            <RegistryValue Action="write" Root="HKLM" Key="SOFTWARE\Classes\Interface\{3E096844-2F07-41F5-A226-618C26784FA9}\TypeLib" Type="string" Value="{739FCD59-2B48-4908-B906-43A26C58007D}" />
+            <RegistryValue Action="write" Root="HKLM" Key="SOFTWARE\Classes\Interface\{3E096844-2F07-41F5-A226-618C26784FA9}\TypeLib" Type="string" Name="Version" Value="1.0" />
+            <RegistryValue Action="write" Root="HKLM" Key="SOFTWARE\Classes\Interface\{3E096844-2F07-41F5-A226-618C26784FA9}" Type="string" Value="IFileStream" />
+            
+            <RegistryValue Action="write" Root="HKLM" Key="SOFTWARE\Classes\Interface\{5DA0A7DE-77D0-4E9B-A528-1081B655AB02}\ProxyStubClsid" Type="string" Value="{00020424-0000-0000-C000-000000000046}" />
+            <RegistryValue Action="write" Root="HKLM" Key="SOFTWARE\Classes\Interface\{5DA0A7DE-77D0-4E9B-A528-1081B655AB02}\ProxyStubClsid32" Type="string" Value="{00020424-0000-0000-C000-000000000046}" />
+            <RegistryValue Action="write" Root="HKLM" Key="SOFTWARE\Classes\Interface\{5DA0A7DE-77D0-4E9B-A528-1081B655AB02}\TypeLib" Type="string" Value="{739FCD59-2B48-4908-B906-43A26C58007D}" />
+            <RegistryValue Action="write" Root="HKLM" Key="SOFTWARE\Classes\Interface\{5DA0A7DE-77D0-4E9B-A528-1081B655AB02}\TypeLib" Type="string" Name="Version" Value="1.0" />
+            <RegistryValue Action="write" Root="HKLM" Key="SOFTWARE\Classes\Interface\{5DA0A7DE-77D0-4E9B-A528-1081B655AB02}" Type="string" Value="IFileStreams" />
+                        
+            <RegistryValue Action="write" Root="HKLM" Key="SOFTWARE\Classes\Interface\{A97059DB-1B04-425B-80B6-9238A1338463}\ProxyStubClsid" Type="string" Value="{00020420-0000-0000-C000-000000000046}" />
+            <RegistryValue Action="write" Root="HKLM" Key="SOFTWARE\Classes\Interface\{A97059DB-1B04-425B-80B6-9238A1338463}\ProxyStubClsid32" Type="string" Value="{00020420-0000-0000-C000-000000000046}" />
+            <RegistryValue Action="write" Root="HKLM" Key="SOFTWARE\Classes\Interface\{A97059DB-1B04-425B-80B6-9238A1338463}\TypeLib" Type="string" Value="{739FCD59-2B48-4908-B906-43A26C58007D}" />
+            <RegistryValue Action="write" Root="HKLM" Key="SOFTWARE\Classes\Interface\{A97059DB-1B04-425B-80B6-9238A1338463}\TypeLib" Type="string" Name="Version" Value="1.0" />
+            <RegistryValue Action="write" Root="HKLM" Key="SOFTWARE\Classes\Interface\{A97059DB-1B04-425B-80B6-9238A1338463}" Type="string" Value="DFileDefragmenterEvents" />
+            
+            <RegistryValue Action="write" Root="HKLM" Key="SOFTWARE\Classes\Interface\{A9E4A961-5640-4EE9-98B2-AF2C26CF1C25}\ProxyStubClsid" Type="string" Value="{00020424-0000-0000-C000-000000000046}" />
+            <RegistryValue Action="write" Root="HKLM" Key="SOFTWARE\Classes\Interface\{A9E4A961-5640-4EE9-98B2-AF2C26CF1C25}\ProxyStubClsid32" Type="string" Value="{00020424-0000-0000-C000-000000000046}" />
+            <RegistryValue Action="write" Root="HKLM" Key="SOFTWARE\Classes\Interface\{A9E4A961-5640-4EE9-98B2-AF2C26CF1C25}\TypeLib" Type="string" Value="{739FCD59-2B48-4908-B906-43A26C58007D}" />
+            <RegistryValue Action="write" Root="HKLM" Key="SOFTWARE\Classes\Interface\{A9E4A961-5640-4EE9-98B2-AF2C26CF1C25}\TypeLib" Type="string" Name="Version" Value="1.0" />
+            <RegistryValue Action="write" Root="HKLM" Key="SOFTWARE\Classes\Interface\{A9E4A961-5640-4EE9-98B2-AF2C26CF1C25}" Type="string" Value="IFileDefragmenter" />
+            
+            <RegistryValue Action="write" Root="HKLM" Key="SOFTWARE\Classes\TypeLib\{739FCD59-2B48-4908-B906-43A26C58007D}\1.0\0\$(var.TypeKey)" Type="string" Value="[#File.CoFrag.Dll]" />
+            <RegistryValue Action="write" Root="HKLM" Key="SOFTWARE\Classes\TypeLib\{739FCD59-2B48-4908-B906-43A26C58007D}\1.0\FLAGS" Type="string" Value="0" />
+            <RegistryValue Action="write" Root="HKLM" Key="SOFTWARE\Classes\TypeLib\{739FCD59-2B48-4908-B906-43A26C58007D}\1.0\HELPDIR" Type="string" Value="[$Component.CoFrag.Dll]" />
+            <RegistryValue Action="write" Root="HKLM" Key="SOFTWARE\Classes\TypeLib\{739FCD59-2B48-4908-B906-43A26C58007D}\1.0" Type="string" Value="FragExt Engine" />
+         </Component>
+         
+         <Component Id="Component.FragShx.Dll" Guid="13F67A8B-FEBB-96B4-17AF-153780FE500D" KeyPath="yes" Win64="$(var.IsWin64)">
+            <File Id="File.FragShx.Dll" Name="FragShx.dll" Vital="yes" DiskId="1" BindPath="" Source=".\..\FragShx.Dll\$(var.O)\FragShx.dll" />
+
+            <RegistryValue Action="write" Root="HKLM" Key="SOFTWARE\Classes\*\shellex\ContextMenuHandlers\FragExt" Type="string" Value="{B23E896C-5CC0-40AB-916D-3BA3328FEADD}" />
+            <RegistryValue Action="write" Root="HKLM" Key="SOFTWARE\Classes\*\shellex\PropertySheetHandlers\{8935BD84-0BDB-4AE5-869C-18EEA4E81D77}" Type="string" Value="FragExt" />
+            <RegistryValue Action="write" Root="HKLM" Key="SOFTWARE\Classes\Directory\shellex\ContextMenuHandlers\FragExt" Type="string" Value="{B23E896C-5CC0-40AB-916D-3BA3328FEADD}" />
+            <RegistryValue Action="write" Root="HKLM" Key="SOFTWARE\Classes\Directory\shellex\PropertySheetHandlers\{8935BD84-0BDB-4AE5-869C-18EEA4E81D77}" Type="string" Value="FragExt" />
+
+            <RegistryValue Action="write" Root="HKLM" Key="SOFTWARE\Classes\CLSID\{8935BD84-0BDB-4AE5-869C-18EEA4E81D77}" Type="string" Value="FragExt" />
+            <RegistryValue Action="write" Root="HKLM" Key="SOFTWARE\Classes\CLSID\{8935BD84-0BDB-4AE5-869C-18EEA4E81D77}\InprocServer32" Type="string" Value="[#File.FragShx.Dll]" />
+            <RegistryValue Action="write" Root="HKLM" Key="SOFTWARE\Classes\CLSID\{8935BD84-0BDB-4AE5-869C-18EEA4E81D77}\InprocServer32" Type="string" Name="ThreadingModel" Value="Apartment" />
+            <RegistryValue Action="write" Root="HKLM" Key="SOFTWARE\Microsoft\Windows\CurrentVersion\Shell Extensions\Approved" Type="string" Name="{8935BD84-0BDB-4AE5-869C-18EEA4E81D77}" Value="FragExt" />
+
+            <RegistryValue Action="write" Root="HKLM" Key="SOFTWARE\Classes\CLSID\{B23E896C-5CC0-40AB-916D-3BA3328FEADD}" Type="string" Value="FragExt" />
+            <RegistryValue Action="write" Root="HKLM" Key="SOFTWARE\Classes\CLSID\{B23E896C-5CC0-40AB-916D-3BA3328FEADD}\InprocServer32" Type="string" Value="[#File.FragShx.Dll]" />
+            <RegistryValue Action="write" Root="HKLM" Key="SOFTWARE\Classes\CLSID\{B23E896C-5CC0-40AB-916D-3BA3328FEADD}\InprocServer32" Type="string" Name="ThreadingModel" Value="Apartment" />
+            <RegistryValue Action="write" Root="HKLM" Key="SOFTWARE\Microsoft\Windows\CurrentVersion\Shell Extensions\Approved" Type="string" Name="{B23E896C-5CC0-40ab-916D-3BA3328FEADD}" Value="FragExt" />
+         </Component>
+
+         <!-- This is a registration component for the column handler in FragShx.dll. The condition will prevent it from being
+              used on Vista and later systems, which don't support column handlers -->
+         <Component Id="Component.FragShx.Dll.Registration.ColumnHandler" Guid="01BA3F66-7D02-48F6-88D3-2FAEEBA24DCE" KeyPath="no" Win64="$(var.IsWin64)">
+            <Condition><![CDATA[VersionNT < 600]]></Condition>
+            
+            <RegistryValue Action="write" Root="HKLM" Key="SOFTWARE\Classes\Folder\shellex\ColumnHandlers\{242ED098-D606-4FA8-9DDE-89AEDFE4EAD7}" Type="string" Value="FragExt" />
+            
+            <RegistryValue Action="write" Root="HKLM" Key="SOFTWARE\Classes\CLSID\{242ED098-D606-4FA8-9DDE-89AEDFE4EAD7}" Type="string" Value="FragExt" KeyPath="yes" />
+            <RegistryValue Action="write" Root="HKLM" Key="SOFTWARE\Classes\CLSID\{242ED098-D606-4FA8-9DDE-89AEDFE4EAD7}\InprocServer32" Type="string" Value="[INSTALLDIR]FragShx.dll" />
+            <RegistryValue Action="write" Root="HKLM" Key="SOFTWARE\Classes\CLSID\{242ED098-D606-4FA8-9DDE-89AEDFE4EAD7}\InprocServer32" Type="string" Name="ThreadingModel" Value="Both" />
+            <RegistryValue Action="write" Root="HKLM" Key="SOFTWARE\Microsoft\Windows\CurrentVersion\Shell Extensions\Approved" Type="string" Name="{242ED098-D606-4FA8-9DDE-89AEDFE4EAD7}" Value="FragExt" />
+         </Component>
+         
+         <Component Id="Component.FragEng.Dll" Guid="D70D4C32-7799-A776-70DE-C3C57650CBD7" KeyPath="yes" Win64="$(var.IsWin64)">
+            <File Id="File.FragEng.Dll" Name="FragEng.dll" Vital="yes" DiskId="1" BindPath="" Source=".\..\FragEng.Dll\$(var.O)\FragEng.dll" />
+         </Component>
+         
+         <Directory Id="Directory.FragExt.Mui.En_Us" Name="en-US">
+            <Component Id="Component.FragMgx.Exe.En_Us.Mui" Guid="5E129325-1578-4BE2-834D-8AA6C953AB12" KeyPath="yes" Win64="$(var.IsWin64)">
+               <File Id="File.FragMgx.Exe.En_Us.Mui" Name="FragMgx.exe.mui" Vital="yes" DiskId="1" BindPath="" Source=".\..\FragMgx.Exe\$(var.O)\en-US\FragMgx.exe.mui" />
+            </Component>
+            <Component Id="Component.FragSvx.Exe.En_Us.Mui" Guid="95F38016-C496-404B-8432-EE4C7175D1C0" KeyPath="yes" Win64="$(var.IsWin64)">
+               <File Id="File.FragSvx.Exe.En_Us.Mui" Name="FragSvx.exe.mui" Vital="yes" DiskId="1" BindPath="" Source=".\..\FragSvx.Exe\$(var.O)\en-US\FragSvx.exe.mui" />
+            </Component>
+            <Component Id="Component.FragShx.Dll.En_Us.Mui" Guid="7F13B985-DDA2-4DD9-9604-13CF711AEB6C" KeyPath="yes" Win64="$(var.IsWin64)">
+               <File Id="File.FragShx.Dll.En_Us.Mui" Name="FragShx.dll.mui" Vital="yes" DiskId="1" BindPath="" Source=".\..\FragShx.Dll\$(var.O)\en-US\FragShx.dll.mui" />
+            </Component>
+         </Directory>
+         
+         <Directory Id="Directory.Scripts" Name="Scripts">
+            <Component Id="Component.Scripts.FragInfo.Js" Guid="20D44C7F-CDDF-096A-6B8A-A2C41AA139C7" KeyPath="yes" Win64="$(var.IsWin64)">
+               <File Id="File.FragInfo.Js" Name="FragInfo.js" Vital="no" DiskId="1" Source=".\..\CoFrag.Dll\FragInfo.js" />
+            </Component>
+            
+            <Component Id="Component.Scripts.Defrag.Js" Guid="DF1A7B3E-59A3-9976-DF1B-32BBD408713F" KeyPath="yes" Win64="$(var.IsWin64)">
+               <File Id="File.Defrag.Js" Name="Defrag.js" Vital="no" DiskId="1" Source=".\..\CoFrag.Dll\Defrag.js" />
+            </Component>
+            
+            <Component Id="Component.Scripts.Defrag.Hta" Guid="C56ADBD5-EEC8-44F1-926D-49D27D9AAAD7" KeyPath="yes" Win64="$(var.IsWin64)">
+               <File Id="File.Defrag.Hta" Name="Defrag.hta" Vital="yes" DiskId="1" Source=".\..\CoFrag.Dll\Defrag.hta" />
+            </Component>
+         </Directory>
+      </DirectoryRef>
+
+      <DirectoryRef Id="DesktopFolder">
+         <Component Id="Component.Shortcut.Desktop.FragMgx" Guid="E8BB2960-DD65-415D-A14E-4B9FA43657C6" KeyPath="no" Win64="$(var.IsWin64)">
+            <RegistryKey Root="HKCU" Key="Software\jBoschen\FragExt">
+               <RegistryValue KeyPath="yes" Type="integer" Name="Installed" Value="1" />
+            </RegistryKey>
+            <Shortcut Id="Shortcut.Desktop.FragMgx" Directory="DesktopFolder" Name="FragExt Defrag Manager" Description="Launches the FragExt Defrag Manager." IconIndex="1" Show="normal" Target="[INSTALLDIR]FragMgx.exe" WorkingDirectory="INSTALLDIR" />
+         </Component>
+      </DirectoryRef>
+
+      <DirectoryRef Id="Directory.AppData.jBoschen">
+         <Component Id="Component.Data.Common" Guid="F899320F-0401-403F-89E4-B1CA107A6EDA" KeyPath="no" Win64="$(var.IsWin64)">
+            <Condition>NOT (ALLUSERS)</Condition>
+            <RegistryKey Root="HKCU" Key="Software\jBoschen\FragExt">
+               <RegistryValue KeyPath="yes" Type="integer" Name="Installed" Value="1" />
+
+               <!-- FragSvx -->
+               <RegistryValue KeyPath="no" Type="integer" Name="ClusterBlocks" Value="1" />
+               <!-- FragMgx -->
+               <RegistryValue KeyPath="no" Type="integer" Name="AutoClose" Value="0" />
+               <RegistryValue KeyPath="no" Type="integer" Name="IncludeAltDataStreams" Value="1" />
+               <!-- FragShx -->
+               <RegistryValue KeyPath="no" Type="integer" Name="ShowCompressed" Value="1" />
+               <RegistryValue KeyPath="no" Type="integer" Name="ShowStreams" Value="1" />
+               <RegistryValue KeyPath="no" Type="integer" Name="PropColumnMask" Value="7" />
+            </RegistryKey>
+
+            <CreateFolder Directory="Directory.AppData.jBoschen" />
+            <CreateFolder Directory="Directory.AppData.jBoschen.FragExt" />
+            
+            <!-- This will clear out any files like the FragMgx.loc file from the FragExt directory -->
+            <RemoveFile Id="RemoveFiles.AppData.jBoschen.FragExt" Property="Directory.AppData.jBoschen.FragExt" Name="*" On="both" />
+            <RemoveFolder Id="RemoveFolder.AppData.jBoschen.FragExt" Property="Directory.AppData.jBoschen.FragExt" On="both" />
+            
+            <RemoveFolder Id="RemoveFolder.AppData.jBoschen" Property="Directory.AppData.jBoschen" On="both" />
+         </Component>
+      </DirectoryRef>      
+   
+<!--$$
+
+   Product features
+   
+$$-->
+
+      <!--$$ Application files  $$-->
+      <Feature Id="Feature.FragExt" Level="1" Title="Applications" Description="Installs the Defrag Manager and shell extensions." Display="expand" TypicalDefault="install" ConfigurableDirectory="INSTALLDIR">
+         <Feature Id="Feature.Shortcut.Desktop.FragMgx" Level="1" Title="Desktop Shortcut" Description="Creates a shortcut to the Defrag Manager on the desktop." Display="expand" TypicalDefault="install">
+            <ComponentRef Id="Component.Shortcut.Desktop.FragMgx" />
+         </Feature>
+
+         <ComponentRef Id="Component.License.Txt" />
+         <ComponentRef Id="Component.History.Txt" />
+         <ComponentRef Id="Component.FragMgx.Exe" />
+         <ComponentRef Id="Component.FragEng.Dll" />
+         <ComponentRef Id="Component.FragSvx.Exe" />
+         <ComponentRef Id="Component.CoFrag.Dll" />
+         <ComponentRef Id="Component.FragShx.Dll" />
+         <ComponentRef Id="Component.FragShx.Dll.Registration.ColumnHandler" />
+         <ComponentRef Id="Component.FragMgx.Exe.En_Us.Mui" />
+         <ComponentRef Id="Component.FragSvx.Exe.En_Us.Mui" />
+         <ComponentRef Id="Component.FragShx.Dll.En_Us.Mui" />
+         <ComponentRef Id="Component.Scripts.FragInfo.Js" />
+         <ComponentRef Id="Component.Scripts.Defrag.Js" />
+         <ComponentRef Id="Component.Scripts.Defrag.Hta" />
+         <ComponentRef Id="Component.Data.Common" />
+      </Feature>
+
+      <Media Id="1" EmbedCab="yes" Cabinet="FragExt.cab" CompressionLevel="high" />
+
+<!--$$
+
+   User interface
+   
+$$-->
+
+      <UIRef Id="WixUI_Mondo" />
+      <UIRef Id="WixUI_ErrorProgressText" />
+
+      <WixVariable Id="WixUILicenseRtf" Value=".\License.rtf"/>
+
+      <Icon Id="Icon.FragExt" SourceFile=".\..\FragMgx.Exe\FragMgx.ico" />
+      
+      <Property Id="WIXUI_INSTALLDIR" Value="INSTALLDIR" />
+      
+      <!-- Add/Remove Programs properties -->
+      <Property Id="ARPHELPLINK"><![CDATA[http://www.mutexed.com/code/FragExt/]]></Property>
+      <Property Id="ARPCONTACT">Jeremy Boschen (software@mutexed.com)</Property>
+      <Property Id="ARPCOMMENTS">File fragmentation shell extensions</Property>
+      <Property Id="ARPURLINFOABOUT"><![CDATA[http://www.mutexed.com/code/FragExt/]]></Property>
+      <Property Id="ARPPRODUCTICON">Icon.FragExt</Property>
+
+      <Property Id="ALLUSERS" Secure="yes"/>
+
+      <!-- For when the CloseMessage attribute is stable
+      <Util:CloseApplication Id="Util.CloseApplication.FragMgx.Exe" Sequence="10" Target="FragMgx.exe" CloseMessage="yes" />
+      -->
+      
+      <InstallExecuteSequence>
+         <RemoveExistingProducts After="InstallInitialize" />
+         <LaunchConditions After="AppSearch">NOT Installed</LaunchConditions>
+         <StopServices Sequence="1900" Suppress="no" />
+      </InstallExecuteSequence>
+
+      <InstallUISequence>
+         <LaunchConditions After="AppSearch">NOT Installed</LaunchConditions>
+      </InstallUISequence>
+   </Product>
+</Wix>

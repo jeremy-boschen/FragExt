@@ -1,0 +1,166 @@
+cpp_quote("/* FragExt - Shell extension for providing file fragmentation")
+cpp_quote(" * information.")
+cpp_quote(" *")
+cpp_quote(" * Copyright (C) 2004-2009 Jeremy Boschen. All rights reserved.")
+cpp_quote(" *")
+cpp_quote(" * This software is provided 'as-is', without any express or implied")
+cpp_quote(" * warranty. In no event will the authors be held liable for any damages")
+cpp_quote(" * arising from the use of this software. ")
+cpp_quote(" *")
+cpp_quote(" * Permission is granted to anyone to use this software for any purpose,")
+cpp_quote(" * including commercial applications, and to alter it and redistribute it")
+cpp_quote(" * freely, subject to the following restrictions:")
+cpp_quote(" *")
+cpp_quote(" * 1. The origin of this software must not be misrepresented; you must not")
+cpp_quote(" * claim that you wrote the original software. If you use this software in")
+cpp_quote(" * a product, an acknowledgment in the product documentation would be")
+cpp_quote(" * appreciated but is not required.")
+cpp_quote(" *")
+cpp_quote(" * 2. Altered source versions must be plainly marked as such, and must not")
+cpp_quote(" * be misrepresented as being the original software.")
+cpp_quote(" *")
+cpp_quote(" * 3. This notice may not be removed or altered from any source")
+cpp_quote(" * distribution.")
+cpp_quote(" */")
+cpp_quote("")
+cpp_quote("")
+cpp_quote("/* FragSvx.idl")
+cpp_quote(" *    IDL source for FRAGSVX.EXE")
+cpp_quote(" *")
+cpp_quote(" * Copyright (C) 2004-2009 Jeremy Boschen")
+cpp_quote(" */")
+cpp_quote("")
+
+import "oaidl.idl";
+import "ocidl.idl";
+import "objidl.idl";
+
+[
+	object,
+	uuid(D26AF61A-609C-430F-9944-2F9DA30B0D63),
+	oleautomation,
+	pointer_default(unique),
+	helpstring("IFSxDefragmentFileCallback")
+]
+interface IFSxDefragmentFileCallback : IUnknown
+{
+	HRESULT
+	OnDefragmentFileUpdate( 
+		[in, string] LPCWSTR FileName, 
+		[in] ULONG PercentComplete, 
+		[in] ULONG_PTR CallbackParameter 
+	);
+};
+
+cpp_quote("#define DFF_IGNORECONTIGUOUSFILES 0x00000001U")
+cpp_quote("#define DFF_NOTBACKGROUNDPRIORITY 0x00000002U")
+
+[
+	object,
+	uuid(0A1CA5C0-00DF-43cf-A2BD-95118EB5196D),
+	oleautomation,
+	pointer_default(unique),
+	helpstring("IFSxFileDefragmenter")
+]
+interface IFSxFileDefragmenter : IUnknown
+{
+	HRESULT 
+	DefragmentFile(
+		[in, string] LPCWSTR FileName,
+		[in] ULONG Flags,
+		[in] ULONG_PTR CallbackParameter 
+	);
+
+	HRESULT 
+	SetCallbackInterface( 
+		[in] IUnknown* Callback
+	);
+};
+
+[
+	uuid(EF69B978-A080-4318-8CD1-8B68F6352421),
+	version(1.0),
+	lcid(0x0000),
+	helpstring("FragExt Service")
+]
+library FragSvx
+{
+	importlib("stdole2.tlb");
+
+	[
+		uuid(FE0758EC-102C-4228-BB9F-0AA01DB604CF),
+		helpstring("FSxServiceManager")
+	]
+	coclass FSxServiceManager
+	{
+		[default] interface IServiceProvider;
+	};
+			
+	[
+		uuid(64C92C98-3AE1-4795-8268-A114C0F2C61B),
+		helpstring("FSxDefragManager"),
+		noncreatable
+	]
+	coclass FSxFileDefragmenter
+	{
+		[default] interface IFSxFileDefragmenter;      
+	};
+
+	/* This needs to be included here so that MIDL will generate type information
+	 * for it in the typelib */
+	interface IFSxDefragmentFileCallback;
+};
+
+cpp_quote("")
+cpp_quote("#ifndef _FSX_NO_FSXMANAGERQUERYSERVICE")
+cpp_quote("/* FSxManagerQueryService")
+cpp_quote(" *    Wraps CoCreateInstance/QueryService for FSxServiceManager")
+cpp_quote(" */ ")
+cpp_quote("__inline")
+cpp_quote("HRESULT")
+cpp_quote("FSxManagerQueryService(")
+cpp_quote("   __in REFGUID guidService,")
+cpp_quote("   __in REFIID riid,")
+cpp_quote("   __deref_out void** ppService")
+cpp_quote(")")
+cpp_quote("{")
+cpp_quote("   HRESULT            hr;")
+cpp_quote("   IServiceProvider*  pService;")
+cpp_quote("#ifndef _WIN64")
+cpp_quote("   OSVERSIONINFO      VersionInfo;")
+cpp_quote("   DWORD              dwClsContext;")
+cpp_quote("")
+cpp_quote("   ZeroMemory(&VersionInfo,")
+cpp_quote("              sizeof(VersionInfo));")
+cpp_quote("")
+cpp_quote("   VersionInfo.dwOSVersionInfoSize = sizeof(VersionInfo);")
+cpp_quote("")
+cpp_quote("   GetVersionEx(&VersionInfo);")
+cpp_quote("")
+cpp_quote("   dwClsContext = CLSCTX_LOCAL_SERVER|((VersionInfo.dwMajorVersion > 5) || ((VersionInfo.dwMajorVersion == 5) && (VersionInfo.dwMinorVersion >= 1)) ? CLSCTX_DISABLE_AAA : 0);")
+cpp_quote("#endif /* _WIN64 */")
+cpp_quote("")
+cpp_quote("   hr = CoCreateInstance(__uuidof(FSxServiceManager),")
+cpp_quote("                         NULL,")
+cpp_quote("#ifdef _WIN64")
+cpp_quote("                         CLSCTX_LOCAL_SERVER|CLSCTX_DISABLE_AAA|CLSCTX_ACTIVATE_64_BIT_SERVER,")
+cpp_quote("#else /* _WIN64 */")
+cpp_quote("                         dwClsContext,")
+cpp_quote("#endif /* _WIN64 */")
+cpp_quote("                         __uuidof(IServiceProvider),")
+cpp_quote("                         (void**)&pService);")
+cpp_quote("")
+cpp_quote("   if ( SUCCEEDED(hr) )")
+cpp_quote("   {")
+cpp_quote("      hr = pService->QueryService(guidService,")
+cpp_quote("                                  riid,")
+cpp_quote("                                  ppService);")
+cpp_quote("")
+cpp_quote("      pService->Release();")
+cpp_quote("   }")
+cpp_quote("")
+cpp_quote("   /* Success / Failure */")
+cpp_quote("   return ( hr );")
+cpp_quote("}")
+cpp_quote("#endif /* _FSX_NO_FSXMANAGERQUERYSERVICE */")
+cpp_quote("")

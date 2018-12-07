@@ -1,0 +1,81 @@
+
+!include ..\Sources.inc
+
+BUILD_PRODUCES       = FragMgx.Exe
+BUILD_CONSUMES       = FragEng.Dll FragSvx.Exe
+
+COFFBASE_TXT_FILE    = ..\CoffBase.txt
+COFFBASE             = fragmgx
+
+USE_NATIVE_EH        = 1
+
+USE_ATL              = 1
+ATL_VER              = 70
+
+PRECOMPILED_CXX      = 1
+PRECOMPILED_INCLUDE  = Stdafx.h
+PRECOMPILED_OBJ      = Stdafx.obj
+PRECOMPILED_PCH      = Stdafx.pch
+
+TARGETNAME           = FragMgx
+TARGETTYPE           = PROGRAM
+TARGETEXT            = exe
+UMTYPE               = windows
+UMENTRY              = wwinmain
+
+SXS_APPLICATION_MANIFEST   = FragMgx.manifest
+SXS_ASSEMBLY_VERSION       = 1.0
+SXS_ASSEMBLY_NAME          = jBoschen.FragExt.$(TARGETNAME)
+SXS_ASSEMBLY_LANGUAGE      = 0000
+
+!if $(FREEBUILD)
+C_DEFINES            = $(C_DEFINES)
+!else
+C_DEFINES            = $(C_DEFINES)
+!endif
+C_DEFINES            = $(C_DEFINES)
+
+LINKER_FLAGS         = $(LINKER_FLAGS) /NXCOMPAT /IGNORE:4199 /DELAYLOAD:UxTheme.dll 
+
+IDL_TYPE             = OLE
+MIDL_TARGET          = NT51
+MIDL_UUIDDIR         = $(OBJ_PATH)\$O
+MIDL_FLAGS           = $(MIDL_FLAGS) /out $O
+
+NOT_LEAN_AND_MEAN    = 1
+
+#PASS0_HEADERDIR		= $(MAKEDIR_LOWERCASE:fragmgx.exe=)inc\
+
+TARGETLIBS= \
+   $(TARGETLIBS) \
+   $(SDK_LIB_PATH)\kernel32.lib        \
+   $(SDK_LIB_PATH)\user32.lib          \
+   $(SDK_LIB_PATH)\gdi32.lib           \
+   $(SDK_LIB_PATH)\advapi32.lib        \
+   $(SDK_LIB_PATH)\comdlg32.lib        \
+   $(SDK_LIB_PATH)\ole32.lib           \
+   $(SDK_LIB_PATH)\oleaut32.lib        \
+   $(SDK_LIB_PATH)\uuid.lib            \
+   $(SDK_LIB_PATH)\comctl32.lib        \
+   $(SDK_LIB_PATH)\shell32.lib         \
+   $(SDK_LIB_PATH)\uxtheme.lib         \
+   $(DDK_LIB_PATH)\ntdll.lib           \
+   $(SDK_LIB_PATH)\shlwapi.lib         \
+   $(CRT_LIB_PATH)\delayimp.lib        \
+   $(SDK_LIB_PATH)\psapi.lib           \
+   $(WSK_LIB_PATH)\muiload.lib         \
+   ..\FragEng.Dll\$O\FragEng.lib       \
+   ..\FragExt.Lib\$O\FragExt.lib
+
+SOURCES= \
+   FragMgx-en-US.rc  \
+   FragMgx.idl       \
+   MgxEntry.cpp      \
+   MgxModule.cpp
+   
+#   WinMain.cpp       \
+#   Module.cpp        \
+#   DefragMgr.cpp     \
+#   TaskMgr.cpp       \
+#   TaskDlg.cpp       \
+#   $O\FragMgx_i.c    \

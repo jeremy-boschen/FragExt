@@ -1,0 +1,32 @@
+HKCR {
+	NoRemove Folder {
+		NoRemove shellex {
+			NoRemove ColumnHandlers {
+				ForceRemove {242ED098-D606-4FA8-9DDE-89AEDFE4EAD7} = s 'FragExt' 
+			}
+		}
+	}
+
+   NoRemove CLSID {
+   		ForceRemove {242ED098-D606-4FA8-9DDE-89AEDFE4EAD7} = s 'FragExt' {
+			InProcServer32 = s '%MODULE%' {
+				val ThreadingModel = s 'Both'
+			}
+		}
+   }
+}
+HKLM {
+	NoRemove SOFTWARE {
+		NoRemove Microsoft {
+			NoRemove Windows {
+				NoRemove CurrentVersion {
+					NoRemove 'Shell Extensions' {
+						NoRemove Approved	{
+							val {242ED098-D606-4FA8-9DDE-89AEDFE4EAD7} = s 'FragExt'
+                  }
+               }
+            }
+         }
+      }
+   }
+}

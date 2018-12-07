@@ -1,0 +1,53 @@
+
+BUILD_PRODUCES       = FragEng.Dll
+
+COFFBASE_TXT_FILE    = ..\CoffBase.txt
+COFFBASE             = frageng
+
+USE_NATIVE_EH        = 1
+
+PRECOMPILED_CXX      = 1
+PRECOMPILED_INCLUDE  = Stdafx.h
+PRECOMPILED_OBJ      = Stdafx.obj
+PRECOMPILED_PCH      = Stdafx.pch
+
+MAKEDLL              = 1
+TARGETNAME           = FragEng
+TARGETTYPE           = DYNLINK
+TARGETEXT            = dll
+
+!IF !$(FREEBUILD)
+C_DEFINES            = $(C_DEFINES) /D_FRAGENG_DUMPBITMAP
+!ENDIF
+
+LINKER_FLAGS         = $(LINKER_FLAGS) /NXCOMPAT
+!IF $(FREEBUILD)
+USER_C_FLAGS         = $(USER_C_FLAGS) /FAs
+!ENDIF
+
+NTTARGETFILE0        = CustomPreBuild_Target
+NTTARGETFILE1        = CustomBuild_Target
+NTTARGETFILE2        = CustomPostBuild_Target
+
+TARGETLIBS = \
+   $(TARGETLIBS)                 \
+   $(SDK_LIB_PATH)\kernel32.lib  \
+   $(SDK_LIB_PATH)\user32.lib    \
+   $(SDK_LIB_PATH)\gdi32.lib     \
+   $(SDK_LIB_PATH)\advapi32.lib  \
+   $(SDK_LIB_PATH)\comdlg32.lib  \
+   $(SDK_LIB_PATH)\ole32.lib     \
+   $(SDK_LIB_PATH)\oleaut32.lib  \
+   $(SDK_LIB_PATH)\uuid.lib      \
+   $(SDK_LIB_PATH)\comctl32.lib  \
+   $(DDK_LIB_PATH)\ntdll.lib     \
+   $(SDK_LIB_PATH)\version.lib   \
+   $(SDK_LIB_PATH)\psapi.lib     \
+   ..\FragExt.Lib\$O\FragExt.lib \
+
+SOURCES = \
+   FragEng.rc           \
+   FragCtx.cpp          \
+   FileDefrag.cpp       \
+   FragEng.cpp          \
+   FragEng2.cpp

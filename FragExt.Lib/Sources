@@ -1,0 +1,41 @@
+
+!include ..\Sources.inc
+
+BUILD_PRODUCES       = FragExt.Lib
+
+USE_NATIVE_EH        = 1
+
+PRECOMPILED_CXX      = 1
+PRECOMPILED_INCLUDE  = Stdafx.h
+PRECOMPILED_OBJ      = Stdafx.obj
+PRECOMPILED_PCH      = Stdafx.pch
+
+TARGETTYPE           = LIBRARY
+TARGETNAME           = FragExt
+TARGETEXT            = lib
+
+C_DEFINES            = $(C_DEFINES) /DSIDTEMPLATE_NOAUTODEFINE
+LINKER_FLAGS         = $(LINKER_FLAGS) /NXCOMPAT
+
+#USER_C_FLAGS = $(USER_C_FLAGS) /FAs
+#LINKER_FLAGS = $(LINKER_FLAGS) /VERBOSE
+
+SOURCES = \
+   DbgUtil.cpp    \
+   SeUtil.cpp     \
+   RegUtil.cpp    \
+   DirUtil.cpp    \
+   PathUtil.cpp   \
+   CacheList.cpp  \
+   ThreadUtil.cpp \
+   StreamUtil.cpp \
+   GuidDb.cpp     \
+   RWLock.cpp     \
+   SpinLock.cpp   \
+   NumberFmt.cpp	\
+   COMLib.cpp     \
+   WinLib.cpp
+
+AMD64_SOURCES =   \
+   amd64\X64WndProcProxy.asm
+   

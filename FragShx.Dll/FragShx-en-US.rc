@@ -1,0 +1,159 @@
+
+#include "Resource.h"
+#include <commctrl.h>
+#include <winres.h>
+
+/////////////////////////////////////////////////////////////////////////////
+//
+// English (U.S.) resources
+//
+LANGUAGE LANG_ENGLISH, SUBLANG_ENGLISH_US
+#pragma code_page(65001)
+
+/////////////////////////////////////////////////////////////////////////////
+//
+// Include the Language Neutral resources
+//
+#include "FragShx-LN.rc"
+
+/////////////////////////////////////////////////////////////////////////////
+//
+// Dialog
+//
+
+IDD_FRAGMENT_INFORMATION DIALOGEX 0, 0, 152, 141
+STYLE DS_SETFONT | DS_MODALFRAME | DS_3DLOOK | DS_FIXEDSYS | DS_CONTROL | WS_CHILD | WS_CAPTION
+CAPTION "Fragments"
+FONT 8, "MS Shell Dlg", 0, 0, 0x0
+BEGIN
+    LTEXT      "Fragment information:",IDC_STCFRAGMENTS,7,7,138,8
+    CONTROL    "",IDC_LSVFRAGMENTS,"SysListView32",LVS_REPORT | LVS_SINGLESEL | LVS_SHOWSELALWAYS | LVS_ALIGNLEFT | LVS_OWNERDATA | WS_CLIPCHILDREN | WS_TABSTOP,7,17,138,92,WS_EX_CLIENTEDGE
+END
+
+IDD_FOLDERSELECT DIALOGEX 0, 0, 316, 113
+STYLE DS_SETFONT | DS_MODALFRAME | DS_3DLOOK | DS_FIXEDSYS | DS_SETFOREGROUND | DS_CENTER | WS_POPUP | WS_CAPTION | WS_SYSMENU | WS_THICKFRAME
+EXSTYLE WS_EX_DLGMODALFRAME
+CAPTION "FragExt"
+FONT 8, "MS Shell Dlg", 0, 0, 0x0
+BEGIN
+    LTEXT           "Process all files in selected directories?",IDC_STCINFO,7,7,302,9
+    CONTROL         "",IDC_LSVFOLDERLIST,"SysListView32",LVS_ALIGNLEFT | LVS_REPORT | LVS_SINGLESEL | LVS_SHOWSELALWAYS | LVS_NOLABELWRAP | LVS_NOSORTHEADER | WS_TABSTOP,7,20,302,68,WS_EX_CLIENTEDGE
+    DEFPUSHBUTTON   "OK",IDOK,259,92,50,14
+END
+
+/////////////////////////////////////////////////////////////////////////////
+//
+// Menu
+//
+
+IDR_PROPTOOL MENU 
+BEGIN
+    POPUP ""
+    BEGIN
+        MENUITEM "De&fragment",                 IDM_PROPDEFRAGMENTFILE
+        MENUITEM "R&efresh",                    IDM_PROPREFRESHFILE
+        MENUITEM SEPARATOR
+        POPUP "&Save report to"
+        BEGIN
+            MENUITEM "&Clipboard",              IDM_PROPREPORTTOCLIP
+            MENUITEM "&File...",                IDM_PROPREPORTTOFILE
+        END
+        MENUITEM SEPARATOR
+        MENUITEM "Sho&w Compressed",            IDM_PROPSHOWCOMPRESSED, GRAYED
+        MENUITEM SEPARATOR
+        MENUITEM "P&roperties",                 IDM_PROPPROPERTIES, GRAYED
+    END
+END
+
+IDR_PROPCOLUMS MENU
+BEGIN
+   POPUP ""
+   BEGIN
+      MENUITEM "#",                             IDM_PROPCOLSEQUENCE, CHECKED, GRAYED
+      MENUITEM "Size",                          IDM_PROPCOLSIZE
+      MENUITEM "% of File",                     IDM_PROPCOLPERCENTAGE
+      MENUITEM "Clusters",                      IDM_PROPCOLCLUSTERS
+      MENUITEM "Extents",                       IDM_PROPCOLEXTENTS
+      MENUITEM SEPARATOR
+      MENUITEM "Resize Columns",                IDM_PROPCOLAUTOSIZE
+   END
+END
+
+IDR_SHELLCONTEXTMENU MENU 
+BEGIN
+   MENUITEM "De&fragment",                      IDM_SHELLDEFRAGMENTFILE
+   MENUITEM SEPARATOR
+   POPUP "&Save report to"
+   BEGIN
+      MENUITEM "&Clipboard",                    IDM_SHELLREPORTTOCLIP
+      MENUITEM "&File...",                      IDM_SHELLREPORTTOFILE
+   END
+END
+
+IDR_FOLDERSELCONTEXT MENU
+BEGIN
+   POPUP ""
+   BEGIN
+      MENUITEM "&Check all",                    IDM_FOLDERSELCHECK
+      MENUITEM "&Uncheck all",                  IDM_FOLDERSELUNCHECK
+   END
+END
+
+/////////////////////////////////////////////////////////////////////////////
+//
+// String Table
+//
+
+STRINGTABLE 
+BEGIN
+   IDS_COLSEQUENCE               "#"
+   IDS_COLSIZE                   "Size"
+   IDS_COLPERCENTAGE             "% of File"
+   IDS_COLCLUSTERS               "Clusters"
+   IDS_COLEXTENTS                "Extents"
+
+   IDS_FMTFILEFINFO              "%s\nSize: %s, Fragments: %s"
+   IDS_FMTFVIRTUALFRAGINFO       " (%s virtual)"
+
+   IDS_MENUHELPDEFRAGMENT        "Defragments the selected files"
+   IDS_MENUHELPREPORTCLIP        "Creates a fragmentation report for the selected files and saves it to the clipboard"
+   IDS_MENUHELPREPORTFILE        "Creates a fragmentation report for the selected files and saves it to a file"
+
+   IDS_COLFRAGMENTSTITLE         "Fragments"
+   IDS_COLFRAGMENTSDESC          "Displays the number of fragments in use by a file."
+   IDS_TIPFRAGMENTS              "Fragments: "
+   
+   IDS_COLEXTENTSTITLE           "Extents"
+   IDS_COLEXTENTSDESC            "Displays the number of extents in use by a file."
+   IDS_TIPEXTENTS                "Extents: "
+   
+   IDS_COLCLUSTERSTITLE          "Clusters"
+   IDS_COLCLUSTERSDESC           "Displays the number of disk clusters in use by a file."
+   IDS_TIPCLUSTERS               "Clusters: "
+
+   IDS_COLSIZEONDISKTITLE        "Size on Disk"
+   IDS_COLSIZEONDISKDESC         "Displays the size of the file on disk."
+   IDS_TIPSIZEONDISK             "Size on Disk: "
+
+   IDS_COLDATASTREAMSTITLE       "Streams"
+   IDS_COLDATASTREAMSDESC        "Displays the number of alternate NTFS data streams belonging to a file."
+   IDS_TIPDATASTREAMS            "Streams: "
+   
+   IDS_COLPERCENTONDISKSTITLE    "% on Disk"
+   IDS_COLPERCENTONDISKDESC      "Displays the percentage of the file stored on disk."
+   IDS_TIPPERCENTONDISK          "% on Disk: "
+
+   IDS_LABELUNKNOWN              "Unknown"
+
+   IDS_REPORT_FILEPATH           "===================================================== FragExt Fragmentation Report ====================================================\r\n\r\nFile:       %s\r\n"
+   IDS_REPORT_FILESIZE           "Size:       %s (%s on Disk)\r\n"
+   IDS_REPORT_FILEFRAGMENTS      "Fragments:  %s\r\n"
+   IDS_REPORT_FRAGMENTSHEADER    "\r\n#                       LCN                     Extents                 Clusters                Size                    Percent of File\r\n---------------------------------------------------------------------------------------------------------------------------------------\r\n"
+   IDS_REPORT_SAVEFILTER         "All Files (*.*)\0*.*\0Text Files (*.txt)\0*.txt\0"
+   IDS_REPORT_DEFAULTSAVEEXT     "txt"
+
+   IDS_TIP_FILE                  "File: "
+   IDS_TIP_FILESTREAM            "Alternate Data Stream: "
+
+   IDS_FOLDERSELECT_COLPATH      "Folder path"
+END

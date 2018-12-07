@@ -1,0 +1,16 @@
+HKCR {
+	NoRemove AppID {
+		'%APPID%' = s 'FragMgx' {
+		}
+		'FragMgx.exe' {
+			val AppID = s '%APPID%'
+		}
+	}
+	NoRemove CLSID	{
+		ForceRemove {5B2289D9-86CC-46B5-9735-8B9B865C9833} = s 'DefragManager' {
+			val AppID = s '%APPID%'
+			LocalServer32 = s '%MODULE%'
+			'TypeLib' = s '{C2D860BE-D466-4CA0-98BC-CD34526BD340}'
+		}
+	}
+}

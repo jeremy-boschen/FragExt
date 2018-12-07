@@ -1,0 +1,69 @@
+
+/////////////////////////////////////////////////////////////////////////////
+//
+// Version
+//
+
+VS_VERSION_INFO VERSIONINFO
+ FILEVERSION PRODUCTVERSIONNUMBER
+ PRODUCTVERSION PRODUCTVERSIONNUMBER
+ FILEFLAGSMASK 0x3fL
+#ifdef _DEBUG
+ FILEFLAGS 0x1L
+#else
+ FILEFLAGS 0x0L
+#endif
+ FILEOS 0x4L
+ FILETYPE 0x1L
+ FILESUBTYPE 0x0L
+BEGIN
+    BLOCK "StringFileInfo"
+    BEGIN
+        BLOCK "040904e4"
+        BEGIN
+            VALUE "CompanyName", "Jeremy Boschen"
+            VALUE "FileDescription", "FragExt Defrag Manager"
+            VALUE "FileVersion", PRODUCTVERSIONSTRING
+            VALUE "LegalCopyright", PRODUCTCOPYRIGHTSTRING
+            VALUE "InternalName", "FragMgx.exe"
+            VALUE "OriginalFilename", "FragMgx.exe"
+            VALUE "ProductName", "FragMgx"
+            VALUE "ProductVersion", PRODUCTVERSIONSTRING
+        END
+    END
+    BLOCK "VarFileInfo"
+    BEGIN
+        VALUE "Translation", 0x409, 1200
+    END
+END
+
+/////////////////////////////////////////////////////////////////////////////
+//
+// Icon
+//
+
+IDI_FRAGMGX             ICON                    "FragMgx.ico"
+
+/////////////////////////////////////////////////////////////////////////////
+//
+// Bitmap
+//
+IDB_PUSHPIN             BITMAP                  "Img-PushPin.bmp"
+IDB_CHECKBOXSTATE       BITMAP                  "Img-Checkbox.bmp"
+
+/////////////////////////////////////////////////////////////////////////////
+//
+// REGISTRY
+//
+#ifdef _DEBUG
+/* These are only included for debug builds to aid in registration. For release 
+   builds the MSI installer handles all registration requirements 
+ */
+IDR_FRAGMGX             REGISTRY                "FragMgx.rgs"
+#endif /* _DEBUG */
+
+/////////////////////////////////////////////////////////////////////////////
+//
+// TYPELIB
+//
+1                       TYPELIB                 "FragMgx.tlb"

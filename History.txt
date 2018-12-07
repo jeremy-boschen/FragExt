@@ -1,0 +1,133 @@
+FragExt
+Copyright (C) 2004-2009 Jeremy Boschen. All rights reserved.
+Updates available at http://www.mutexed.com/code/FragExt/
+
+Version History
+
+x.x.x.x - ??? ??, ???
+ - Bug fixes
+ 
+2.0.901.3601 - Jul 20, 2008
+- BUGFIX! Fixed a file locking problem in the column handler
+
+2.0.900.3600 - Apr 17, 2008
+- BUGFIX! Fragmentation statistics for large files is accurate
+- NEW! LUA support through a system service
+- NEW! Updated Defrag Manager
+- NEW! Updated installer packages
+- NEW! Vista and Server 2008 support
+- NOTE! Support for viewing details on restricted files, such as the page file and hibernation file has been removed
+- NOTE! This is a large update. Every component has gone through a rewrite
+
+1.0.824.3413 - Sep 26, 2005
+- BUGFIX! Fix for columns intermittently returning bad data.
+
+1.0.823.3410 - Sep 24, 2005
+- BUGFIX! Deadlock in FileFragments enumerator fixed.
+- BUGFIX! Fix for Defrag Manager clipping long path names in the status text.
+- BUGFIX! Miscellaneous SMP synchronization issues fixed.
+- NEW! Explorer column added showing the percentage of a file stored on disk.
+- NEW! FileStreams scripting component to enumerate NTFS data streams.
+- NOTE! Source-code has been removed from the installation package to reduce download size, and is available again as a separate download.
+
+1.0.780.3402 - Jul 14, 2005
+- BUGFIX! Minor fix for how the defrag manager identifies file streams.
+- BUGFIX! Fixed naming errors in the example scripts.
+- NOTE! Compiliation changes were made to reduce code size
+
+1.0.753.3402 - Jul 11, 2005
+- NEW! Defrag Manager application for starting and monitoring file defragmentaiton status.
+- NEW! Reporting feature added to the property-page and context-menus for saving statistics to either a file or the clipboard.
+- NEW! Explorer column added showing the size of a file on disk, useful for compressed/sparse files.
+- NEW! Explorer column added showing the number of alternate data streams for a file.
+- NEW! Property-page optionally shows alternate file data streams.
+- NEW! Scripting interface updates. Nearly every component has received a name change and possibly interface changes. Every component has been given a new GUID and a registry script is included for cleaning up old entries for those of you who don't uninstall old versions first. 
+- NOTE! Many internal changes. Separated components into different modules, added resource localization support, removed ineffective settings, got a new DELL 2005FPW widescreen LCD monitor so that I can truly appreciate my abuse of not breaking long code statements onto separate lines, lots of code cleanup, etc, etc.
+- NOTE! Many options have been removed from the UI registration because they're either obscure or no longer applicable. See the help file for information on what settings still exist and how to change them manually. Oh wait, there is no help file!
+- NOTE! Columns for the property-page are now selected from a menu, accessed by right-clicking the header control.
+- NOTE! Viewing restricted file statistics, like for pagefile.sys, is no longer supported on NT4. I'm also really tired of making other things work with NT4, so if they don't work you will have to get into the source and fix it yourself! ;)
+
+1.0.414.2289 - Mar 24, 2005
+- NEW! Added Refresh option to property-page
+- NEW! Added search optimization settings for defragmentation. This is mainly for Windows 2000 and NT4. What it effectively does is increase the required diskspace required to defragment a file so that the full disk can be searched faster.
+-BUGFIX! Fixed installation failure issues introduced in the previous version.
+
+1.0.346.2237 - Mar 20, 2005
+- NEW! Compressed/sparse fragments are no longer included in the total fragment count.
+- BUGFIX! The property-page was displaying inaccurate information for compressed/sparse files.
+
+1.0.340.2233 - Jan 13, 2005
+- NOTE! First non-beta release
+- BUGFIX! Minor internal fixes
+
+0.0.335.2231 - Nov 30, 2004
+- NEW! Source code available.
+- BUGFIX! Minor internal fixes
+
+0.0.328.2180 - Nov 25, 2004
+- BUGFIX! Fixed a number formatting bug in the InfoTip implementation.
+
+0.0.326.2179 - Nov 20, 2004
+- NEW! InfoTip handlers added to the set.
+
+0.0.321.2178 - Nov 15, 2004
+- BUGFIX! The setting for "Always use non-blocking defragmentation" was reversed.
+
+0.0.317.2174 - Nov 13, 2004, several hours later...
+- BUGFIX! Accidently left a breakpoint in the context-menu handler! DOH!
+
+0.0.316.2174 - Nov 13, 2004
+- NEW! Option to control thread blocking during defragmentation.
+- NEW! Event interface definitions.
+- NEW! Defragmentation progress updating in the property page.
+- NEW! Cursor wait progress indicators added for various operations.
+- BIGFIX! Support defragmentation support for ignoring unallocated clusters reserved by Windows.
+- BUGFIX! Fixed a potential bug with the implementation of the defrag engine and its use of threading.
+
+0.0.298.2083 - Nov 11, 2004
+ - NEW! Single file defragmentation support using a scriptable engine. 
+ - NEW! Context menu handler for defragmenting files directly from the shell. 
+ - NEW! Right-click, defragmentation support in the file property sheet. 
+ - NEW! Scripting samples utilizing the new FragExt.FileDefragmenter component. 
+ - NEW! Added a Count property to the FragExt.FileFragments component. Note that the Length & Count properties return the same values. 
+ - NEW! IMPORTANT! Changes to the scripting interfaces, most notably the open method of FileFragments is now openFile. This was done to keep the naming consistant across the components. Yes, this violates COM law. Also included, in the no-installer Zip package only, are a C/C++ header and lib file for utilizing the components in those languages. 
+ - BUGFIX! Fixed a bug in FragExt.FileDefragmenter that would potentially double-free the enumerator.
+	
+0.0.230.1992 - Nov 02, 2004 
+ - NEW! Scripting component for gathering fragmentation information. See the included FragInfo.js file for an example of how to use the component.
+
+0.0.226.1969 - Oct 30, 2004
+ - BUGFIX! Fixed a display problem on windows.
+ - NEW! Added kernel driver for retrieving details of protected operating system files like pagefile.sys, software.LOG, etc. This functionality is disabled by default. See the notes under Settings for more information.
+	
+0.0.178.1920 - Oct 21, 2004
+ - NEW! Modified display characteristics to show fragments as contiguous extents.
+ - NEW! Added new Explorer columns for Extents and Clusters
+ - NEW! Added new property columns for Extents and Clusters
+ - NEW! Added UI to alter property settings.
+	
+0.0.164.1798 - Oct 04, 2004
+ - NEW! Internal changes to add support for NT 4.0+ SP6 (Common Control DLL version 5.80.2614.3600 or greater is required. You can download it here.)
+	
+0.0.130.1726 - Sep 30, 2004
+ - BUGFIX! Introduced a bug in 0.0.126.1723 which caused UNC paths crash explorer on Win2K. Ouch!
+ - BUGFIX! In rare cases, a registry handle was being leaked.
+ - BUGFIX! One time while playing in the woods, I ran through a spider web and freaked out.
+	
+0.0.126.1723 - Sep 29, 2004
+ - BUGFIX! Files for which fragment information cannot be determined are no longer displayed as files with 0 fragments. For real this time!
+ - NEW! Files for which a file size cannot be determined are no longer displayed as having 0 bytes.
+ - NEW! Columns can be drag-and-drop reordered
+ - NOTE! Files opened exclusively by another application will generally show inaccurate if any, information.
+	
+0.0.105.1636 - Sep 25, 2004
+ - BUGFIX! Some files were not being closed by the column extension
+ - BUGFIX! Very long file names were not displaying properly in the Property Page extension
+ - BUGFIX! FAT & FAT32 fragment percentages were not being calculated accurately
+ - NOTE! There is only minimal support for UNC paths.
+ - NEW! NTFS files which are stored in their MFT record are no longer displayed as files with 1 fragment.
+ - NEW! Added option to left-align the fragment count displayed by the column extension.
+ - NEW! Files for which fragment information cannot be determined are no longer displayed as files with 0 fragments.
+	
+0.0.56.1593 - Sep 17, 2004
+ - Initial release

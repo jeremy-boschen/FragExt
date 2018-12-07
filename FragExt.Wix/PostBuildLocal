@@ -1,0 +1,4 @@
+
+!INCLUDE ..\commonpostbuildlocal
+
+CustomPostBuildLocal_Target: CopyToVirtualMachineShare

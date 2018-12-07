@@ -1,0 +1,15 @@
+HKCR {
+	NoRemove AppID {
+		'%APPID%' = s 'FragSvx' {
+		}
+		'FragSvx.exe' {
+			val AppID = s '%APPID%'
+		}
+	}
+	NoRemove CLSID	{
+		ForceRemove {FE0758EC-102C-4228-BB9F-0AA01DB604CF} = s 'FSxServiceManager' {
+			val AppID = s '%APPID%'
+			'TypeLib' = s '{EF69B978-A080-4318-8CD1-8B68F6352421}'
+		}
+	}
+}

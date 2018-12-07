@@ -1,0 +1,64 @@
+HKCR {
+	NoRemove AppID {
+		'%APPID%' = s 'FragShx'
+		'FragShx.dll' {
+			val AppID = s '%APPID%'
+		}
+	}
+	NoRemove * {
+	   NoRemove shellex {
+			NoRemove ContextMenuHandlers {
+				ForceRemove FragExt = s '{B23E896C-5CC0-40AB-916D-3BA3328FEADD}'
+			}
+			NoRemove PropertySheetHandlers {
+				ForceRemove {8935BD84-0BDB-4AE5-869C-18EEA4E81D77} = s 'FragExt' 
+			}
+		}
+	}
+	NoRemove Directory {
+		NoRemove shellex {
+			NoRemove ContextMenuHandlers {
+				ForceRemove FragExt = s '{B23E896C-5CC0-40AB-916D-3BA3328FEADD}'
+			}
+			NoRemove PropertySheetHandlers {
+				ForceRemove {8935BD84-0BDB-4AE5-869C-18EEA4E81D77} = s 'FragExt' 
+			}
+		}
+	}
+	NoRemove CLSID {
+		ForceRemove {8935BD84-0BDB-4AE5-869C-18EEA4E81D77} = s 'FragExt' {
+			InprocServer32 = s '%MODULE%' {
+				val ThreadingModel = s 'Apartment'
+			}
+		}		
+		ForceRemove {B23E896C-5CC0-40AB-916D-3BA3328FEADD} = s 'FragExt' {
+			InprocServer32 = s '%MODULE%' {
+				val ThreadingModel = s 'Apartment'
+			}
+		}
+	}
+}
+HKCU {
+	NoRemove Software {
+		NoRemove jBoschen {
+			ForceRemove FragExt {
+			}
+		}
+	}
+}
+HKLM {
+	NoRemove SOFTWARE {
+		NoRemove Microsoft {
+			NoRemove Windows {
+				NoRemove CurrentVersion {
+					NoRemove 'Shell Extensions' {
+						NoRemove Approved	{
+							val {8935BD84-0BDB-4AE5-869C-18EEA4E81D77} = s 'FragExt'
+							val {B23E896C-5CC0-40ab-916D-3BA3328FEADD} = s 'FragExt'
+						}
+					}
+				}
+			}
+		}
+	}
+}

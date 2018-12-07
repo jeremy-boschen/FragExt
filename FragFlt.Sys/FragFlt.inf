@@ -1,0 +1,102 @@
+;;
+;; FragFlt
+;;
+;;
+;; Copyright (c) 2004-2008 Jeremy Boschen. All rights reserved.
+;;
+
+[Version]
+Signature            = "$Windows NT$"
+Class                = "ActivityMonitor"
+ClassGuid            = {b86dff51-a31e-4bac-b3cf-e8cfe75c9fc2}
+Provider             = %jBoschen%
+DriverVer            = 01/01/2008, 6.0.0.1
+CatalogFile          = FragFlt.cat
+
+
+[DestinationDirs]
+DefaultDestDir          = 12
+FragFlt.DriverFiles     = 12            ;%windir%\system32\drivers
+; FragFlt.UserFiles       = 10,FltMgr     ;%windir%\FltMgr
+
+;;
+;; Default install sections
+;;
+
+[DefaultInstall]
+OptionDesc           = %ServiceDescription%
+CopyFiles            = FragFlt.DriverFiles
+;CopyFiles           = FragFlt.DriverFiles, FragFlt.UserFiles
+
+[DefaultInstall.Services]
+AddService          = %ServiceName%,,FragFlt.Service
+
+;;
+;; Default uninstall sections
+;;
+
+[DefaultUninstall]
+DelFiles    = FragFlt.DriverFiles
+;DelFiles   = FragFlt.DriverFiles, FragFlt.UserFiles
+
+[DefaultUninstall.Services]
+DelService = %ServiceName%,0x200      ;Ensure service is stopped before deleting
+
+;
+; Services Section
+;
+
+[FragFlt.Service]
+DisplayName      = %ServiceName%
+Description      = %ServiceDescription%
+ServiceBinary    = %12%\%DriverName%.sys             ;%windir%\system32\drivers\FragFlt.sys
+Dependencies     = FltMgr
+ServiceType      = 2                            ;SERVICE_FILE_SYSTEM_DRIVER
+StartType        = 3                            ;SERVICE_BOOT_START
+ErrorControl     = 1                            ;SERVICE_ERROR_NORMAL
+LoadOrderGroup   = "FSFilter Activity Monitor"
+AddReg           = FragFlt.AddRegistry
+
+;
+; Registry Modifications
+;
+
+[FragFlt.AddRegistry]
+HKR,"Instances","DefaultInstance",0x00000000,%DefaultInstance%
+HKR,"Instances\"%Instance1.Name%,"Altitude",0x00000000,%Instance1.Altitude%
+HKR,"Instances\"%Instance1.Name%,"Flags",0x00010001,%Instance1.Flags%
+
+;
+; Copy Files
+;
+
+[FragFlt.DriverFiles]
+%DriverName%.sys
+
+;[FragFlt.UserFiles]
+;%UserAppName%.exe
+
+[SourceDisksFiles]
+fragflt.sys = 1,,
+
+[SourceDisksNames]
+1 = %DiskId1%,,,
+
+;;
+;; String Section
+;;
+
+[Strings]
+jBoschen                = "Jeremy Boschen"
+ServiceDescription      = "FragExt File Monitor"
+ServiceName             = "FragFlt"
+DriverName              = "fragflt"
+;UserAppName            = "fragflt"
+DiskId1                 = "FragExt Mini-Filter Installation Disk"
+
+;Instances specific information.
+DefaultInstance         = "FragFlt - Primary Instance"
+Instance1.Name          = "FragFlt - Primary Instance"
+Instance1.Altitude      = "395000"
+Instance1.Flags         = 0x1
+

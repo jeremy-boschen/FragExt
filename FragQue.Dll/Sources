@@ -1,0 +1,43 @@
+BUILD_PRODUCES       = FragQue.Dll
+
+COFFBASE_TXT_FILE    = ..\CoffBase.txt
+COFFBASE             = fragque
+
+USE_NATIVE_EH        = 1
+
+PRECOMPILED_CXX      = 1
+PRECOMPILED_INCLUDE  = Stdafx.h
+PRECOMPILED_OBJ      = Stdafx.obj
+PRECOMPILED_PCH      = Stdafx.pch
+
+MAKEDLL              = 1
+DLLDEF               = FragQue.def
+TARGETNAME           = FragQue
+TARGETTYPE           = DYNLINK
+TARGETEXT            = dll
+
+C_DEFINES            = $(C_DEFINES) /D_CRT_SECURE_NO_WARNINGS
+LINKER_FLAGS         = $(LINKER_FLAGS) /NXCOMPAT
+
+NTTARGETFILE0        = CustomPreBuild_Target
+NTTARGETFILE1        = CustomBuild_Target
+NTTARGETFILE2        = CustomPostBuild_Target
+
+TARGETLIBS           =           \
+   $(TARGETLIBS)                 \
+   $(SDK_LIB_PATH)\kernel32.lib  \
+   $(SDK_LIB_PATH)\user32.lib    \
+   $(SDK_LIB_PATH)\gdi32.lib     \
+   $(SDK_LIB_PATH)\advapi32.lib  \
+   $(SDK_LIB_PATH)\comdlg32.lib  \
+   $(SDK_LIB_PATH)\ole32.lib     \
+   $(SDK_LIB_PATH)\oleaut32.lib  \
+   $(SDK_LIB_PATH)\uuid.lib      \
+   $(SDK_LIB_PATH)\comctl32.lib  \
+   $(SDK_LIB_PATH)\shell32.lib   \
+   $(DDK_LIB_PATH)\ntdll.lib     \
+   $(SDK_LIB_PATH)\psapi.lib     \
+
+SOURCES              =  \
+   FragQue.rc           \
+   FragQue.cpp          \

@@ -1,0 +1,18 @@
+
+#include "Resource.h"
+#include <winres.h>
+#include <commctrl.h>
+
+/////////////////////////////////////////////////////////////////////////////
+//
+// English (U.S.) resources
+//
+LANGUAGE LANG_ENGLISH, SUBLANG_ENGLISH_US
+#pragma code_page(65001)
+
+/////////////////////////////////////////////////////////////////////////////
+//
+// Include the Language Neutral resources
+//
+#include "FragSvx-LN.rc"
+

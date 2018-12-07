@@ -1,0 +1,395 @@
+﻿<?xml version="1.0" encoding="utf-8" ?> 
+<Include>
+   
+   <!--$$
+      MaintenanceDlg
+   $$-->
+   <Dialog Id="MaintenanceDlg" Width="373" Height="287" Title="[ProductName]">
+      <Control Id="BannerBmp" Type="Bitmap" X="0" Y="0" Width="373" Height="52" TabSkip="no" Text="DefBannerBitmap" />
+      <Control Id="Line1" Type="Line" X="0" Y="52" Width="373" Height="6" Text="MsiHorizontalLine" />      
+      <Control Id="BannerText" Type="Text" X="9" Y="9" Width="306" Height="33" Transparent="yes">
+         <Text>{\MsSansSerifBold13}[ProductName] Setup Wizard</Text>
+      </Control>
+      <Control Id="BodyText" Type="Text" X="9" Y="63" Width="354" Height="42">
+         <Text>Select whether you want to add/remove features, repair or remove [ProductName].</Text>
+      </Control>
+      
+      <Control Id="RepairRadioGroup" Type="RadioButtonGroup" X="18" Y="108" Width="348" Height="54" Property="MaintenanceMode" Text="MsiRadioButtonGroup">
+         <RadioButtonGroup Property="MaintenanceMode">
+            <RadioButton Value="AddRemove" X="0" Y="0"  Width="348" Height="17" Text="&amp;Add/Remove [ProductName] Features" />
+            <RadioButton Value="Reinstall" X="0" Y="18" Width="348" Height="17" Text="&amp;Repair [ProductName]" />
+            <RadioButton Value="RemoveAll" X="0" Y="36" Width="348" Height="17" Text="Re&amp;move [ProductName]" />
+         </RadioButtonGroup>
+      </Control>
+      
+      <Control Id="Line2" Type="Line" X="0" Y="252" Width="373" Height="6" Text="MsiHorizontalLine" />
+      <Control Id="CancelButton" Type="PushButton" X="156" Y="261" Width="66" Height="18" Cancel="yes" Text="Cancel">
+         <Publish Event="SpawnDialog" Value="CancelDlg"></Publish>
+      </Control>      
+      <Control Id="PreviousButton" Type="PushButton" X="228" Y="261" Width="66" Height="18" Disabled="yes" Text="&lt; &amp;Back" />      
+      <Control Id="FinishButton" Type="PushButton" X="300" Y="261" Width="66" Height="18" Default="yes" Text="&amp;Finish">
+         <Subscribe Event="SetProperty" Attribute="MaintenanceMode" />         
+         <Condition Action="enable"><![CDATA[MaintenanceMode <> "AddRemove"]]></Condition>
+         <Condition Action="disable">MaintenanceMode ="AddRemove"</Condition>         
+         <Condition Action="show"><![CDATA[MaintenanceMode <> "AddRemove"]]></Condition>
+         <Condition Action="hide">MaintenanceMode ="AddRemove"</Condition>
+         <Condition Action="default"><![CDATA[MaintenanceMode <> "AddRemove"]]></Condition>
+         
+         <Publish Property="Uninstall" Value="False">MaintenanceMode = "Reinstall"</Publish>
+         <Publish Property="Uninstall" Value="True">MaintenanceMode = "RemoveAll"</Publish>
+         
+         <!--
+         <Publish Property="INSTDIR" Value="[INSTDIR]">1</Publish>
+         <Publish Event="SetTargetPath" Value="INSTDIR">1</Publish>
+         -->
+         
+         <Publish Property="REINSTALL" Value="ALL">MaintenanceMode = "Reinstall"</Publish>
+         <Publish Event="Reinstall" Value="ALL">MaintenanceMode = "Reinstall"</Publish>
+         
+         <Publish Property="REMOVE" Value="ALL">MaintenanceMode="RemoveAll"</Publish>
+         <Publish Event="Remove" Value="ALL">MaintenanceMode="RemoveAll"</Publish>
+         
+         <Publish Event="EndDialog" Value="Return"><![CDATA[MaintenanceMode <> "AddRemove"]]></Publish>         
+      </Control>
+      <Control Id="NextButton" Type="PushButton" X="300" Y="261" Width="66" Height="18" Default="yes" Text="&amp;Next &gt;">
+         <Subscribe Event="SetProperty" Attribute="MaintenanceMode" />
+         
+         <Condition Action="disable"><![CDATA[MaintenanceMode <> "AddRemove"]]></Condition>
+         <Condition Action="enable">MaintenanceMode ="AddRemove"</Condition>         
+         <Condition Action="hide"><![CDATA[MaintenanceMode <> "AddRemove"]]></Condition>
+         <Condition Action="show">MaintenanceMode ="AddRemove"</Condition>
+         <Condition Action="default">MaintenanceMode ="AddRemove"</Condition>
+         
+         <Publish Property="Uninstall" Value="False">MaintenanceMode = "AddRemove"</Publish>
+         
+         <Publish Property="InstallMode" Value="AddRemove">MaintenanceMode = "AddRemove"</Publish>
+         <Publish Event="NewDialog" Value="CustomizeDlg">MaintenanceMode = "AddRemove"</Publish>
+      </Control>
+   </Dialog>
+   
+   <!--$$
+      ResumeDlg
+   $$-->
+   <Dialog Id="ResumeDlg" Width="373" Height="287" Title="[ProductName]">
+      <Control Id="FinishButton" Type="PushButton" X="300" Y="261" Width="66" Height="18" Default="yes" Text="&amp;Finish">
+         <Publish Event="EndDialog" Value="Return">1</Publish>
+      </Control>
+      <Control Id="CancelButton" Type="PushButton" X="156" Y="261" Width="66" Height="18" Cancel="yes" Text="Cancel">
+         <Publish Event="SpawnDialog" Value="CancelDlg"></Publish>
+      </Control>
+      <Control Id="PreviousButton" Type="PushButton" X="228" Y="261" Width="66" Height="18" Disabled="yes" Text="&lt; &amp;Back" />
+      <Control Id="BannerBmp" Type="Bitmap" X="0" Y="0" Width="373" Height="52" TabSkip="no" Text="DefBannerBitmap" />
+      <Control Id="Line1" Type="Line" X="0" Y="52" Width="373" Height="6" Text="MsiHorizontalLine" />
+      <Control Id="Line2" Type="Line" X="0" Y="252" Width="373" Height="6" Text="MsiHorizontalLine" />
+      <Control Id="BannerText" Type="Text" X="9" Y="9" Width="306" Height="33" Transparent="yes">
+         <Text>{\MsSansSerifBold13}[ProductName] Setup Wizard</Text>
+      </Control>
+      <Control Id="BodyText" Type="Text" X="9" Y="63" Width="354" Height="180">
+         <Text><![CDATA[The installer will resume the installation of [ProductName] on your computer.
+
+Click "Finish" to continue.]]></Text>
+      </Control>
+   </Dialog>
+   
+   <!--$$      
+      WelcomeDlg      
+   $$-->   
+   <Dialog Id="WelcomeDlg" Width="373" Height="287" Title="[ProductName]">
+      <Control Id="BannerBmp" Type="Bitmap" X="0" Y="0" Width="373" Height="52" TabSkip="no" Text="DefBannerBitmap" />
+      <Control Id="Line1" Type="Line" X="0" Y="52" Width="373" Height="6" Text="MsiHorizontalLine" />
+      <Control Id="BannerText" Type="Text" X="9" Y="9" Width="306" Height="33" Transparent="yes">
+         <Text>{\MsSansSerifBold13}[ProductName] Setup Wizard</Text>
+      </Control>
+      <Control Id="WelcomeText" Type="Text" X="9" Y="63" Width="354" Height="114">
+         <Text>The installer will guide you through the steps required to install [ProductName] on your computer.</Text>
+      </Control>
+      
+      <Control Id="Line2" Type="Line" X="0" Y="252" Width="373" Height="6" Text="MsiHorizontalLine" />
+      <Control Id="NextButton" Type="PushButton" X="300" Y="261" Width="66" Height="18" Default="yes" Text="&amp;Next &gt;">
+         <Publish Event="NewDialog" Value="EulaDlg" />
+      </Control>
+      <Control Id="CancelButton" Type="PushButton" X="156" Y="261" Width="66" Height="18" Cancel="yes" Text="Cancel">
+         <Publish Event="SpawnDialog" Value="CancelDlg"></Publish>
+      </Control>
+      <Control Id="PreviousButton" Type="PushButton" X="228" Y="261" Width="66" Height="18" Text="&lt; &amp;Back" Disabled="yes" />
+   </Dialog>
+
+   <!--$$      
+      EulaDlg (End User License Agreement)      
+   $$-->
+   <Dialog Id="EulaDlg" Width="373" Height="287" Title="[ProductName]">
+      <Control Id="BannerBmp" Type="Bitmap" X="0" Y="0" Width="373" Height="52" TabSkip="no" Text="DefBannerBitmap" />
+      <Control Id="Line1" Type="Line" X="0" Y="52" Width="373" Height="6" Text="MsiHorizontalLine" />
+      <Control Id="BannerText" Type="Text" X="9" Y="9" Width="306" Height="33" Transparent="yes">
+         <Text>{\MsSansSerifBold13}License Agreement</Text>
+      </Control>
+      <Control Id="BodyText" Type="Text" X="9" Y="63" Width="360" Height="40">
+         <Text>Please take a moment to read the license agreement now. If you accept the terms below, click "I Agree", then "Next". Otherwise click "Cancel".</Text>
+      </Control>
+      
+      <Control Id="LicenseText" Type="ScrollableText" X="9" Y="105" Width="355" Height="120" Sunken="yes" TabSkip="no">
+         <Text src=".\..\License.rtf" />
+      </Control>
+      <Control Id="AgreeRadioGroup" Type="RadioButtonGroup" X="9" Y="231" Width="355" Height="15" Property="EulaDlg_Property" Text="MsiRadioButtonGroup">
+         <RadioButtonGroup Property="EulaDlg_Property">
+            <RadioButton Value="No" X="0" Y="0" Width="138" Height="15" Text="I &amp;Do Not Agree" />
+            <RadioButton Value="Yes" X="138" Y="0" Width="138" Height="15" Text="I &amp;Agree" />
+         </RadioButtonGroup>
+      </Control>
+      
+      <Control Id="Line2" Type="Line" X="0" Y="252" Width="373" Height="6" Text="MsiHorizontalLine" />
+      <Control Id="CancelButton" Type="PushButton" X="156" Y="261" Width="66" Height="18" Cancel="yes" Text="Cancel">
+         <Publish Event="SpawnDialog" Value="CancelDlg" />
+      </Control>
+      <Control Id="PreviousButton" Type="PushButton" X="228" Y="261" Width="66" Height="18" Text="&lt; &amp;Back">
+         <Publish Event="NewDialog" Value="WelcomeDlg" />
+      </Control>
+      <Control Id="NextButton" Type="PushButton" X="300" Y="261" Width="66" Height="18" Default="yes" Text="&amp;Next &gt;">
+         <Publish Event="NewDialog" Value="CustomizeDlg" />
+         <Subscribe Event="EulaEvent" Attribute="Enabled" />
+         <Condition Action="disable"><![CDATA[EulaDlg_Property<>"Yes"]]></Condition>
+         <Condition Action="enable">EulaDlg_Property="Yes"</Condition>
+      </Control>      
+   </Dialog>
+
+   <!--$$      
+      CustomizeDlg      
+   $$-->
+   <Dialog Id="CustomizeDlg" Width="374" Height="287" Title="[ProductName] [Setup]" NoMinimize="yes" TrackDiskSpace="yes">   
+      <Control Id="BannerBmp" Type="Bitmap" X="0" Y="0" Width="374" Height="52" TabSkip="no" Text="DefBannerBitmap" />
+      <Control Id="Line1" Type="Line" X="0" Y="52" Width="373" Height="6" Text="MsiHorizontalLine" />
+      <Control Id="BannerText" Type="Text" X="9" Y="9" Width="306" Height="33" Transparent="yes">
+         <Text>{\MsSansSerifBold13}Installation Features</Text>
+      </Control>
+      
+      <Control Id="Body" Type="Text" X="9" Y="63" Width="354" Height="22">
+         <Text>Click an icon in the tree below to change how a feature is installed.</Text>
+      </Control> 
+            
+      <Control Id="Tree" Type="SelectionTree" X="9" Y="85" Width="197" Height="129" Property="_BrowseProperty" Sunken="yes" TabSkip="no" Text="Packages" />
+            
+      <Control Id="LocationLabel" Type="Text" X="10" Y="220" Width="175" Height="11" Text="Install Location:">
+         <Subscribe Event="SelectionPathOn" Attribute="Visible" />
+         <Condition Action="hide">Installed</Condition>
+      </Control>
+      <Control Id="Location" Type="Text" X="10" Y="232" Width="215" Height="20">
+         <Text>&lt;The selection's path&gt;</Text>
+         <Subscribe Event="SelectionPath" Attribute="Text" />
+         <Subscribe Event="SelectionPathOn" Attribute="Visible" />
+         <Condition Action="hide">Installed</Condition>
+      </Control>
+      
+      <Control Id="Box" Type="GroupBox" X="210" Y="80" Width="154" Height="135" />      
+      <Control Id="ItemDescription" Type="Text" X="215" Y="90" Width="131" Height="30">
+         <Text>Multiline description of the currently selected item.</Text>
+         <Subscribe Event="SelectionDescription" Attribute="Text" />
+      </Control>
+      <Control Id="ItemSize" Type="Text" X="215" Y="130" Width="131" Height="45">
+         <Text>The size of the currently selected item.</Text>
+         <Subscribe Event="SelectionSize" Attribute="Text" />
+      </Control>
+      
+      <Control Id="Browse" Type="PushButton" X="299" Y="220" Width="66" Height="18" Text="&amp;Change ...">
+         <Publish Event="SelectionBrowse" Value="SelectFolderDlg">1</Publish>
+         <Condition Action="hide">Installed</Condition>
+      </Control>
+      
+      <Control Id="Line2" Type="Line" X="0" Y="252" Width="373" Height="6" Text="MsiHorizontalLine" />      
+      <Control Id="DiskCost" Type="PushButton" X="9" Y="261" Width="66" Height="18">
+         <Text>Disk &amp;Usage</Text>
+         <Publish Event="SpawnDialog" Value="DiskCostDlg">1</Publish>
+         <Subscribe Event="SelectionNoItems" Attribute="Enabled" />
+      </Control>            
+      <Control Id="CancelButton" Type="PushButton" X="156" Y="261" Width="66" Height="18" Cancel="yes" Text="Cancel">
+         <Publish Event="SpawnDialog" Value="CancelDlg" />
+      </Control>
+      <Control Id="PreviousButton" Type="PushButton" X="228" Y="261" Width="66" Height="18" Text="&lt; &amp;Back">
+         <Publish Event="NewDialog" Value="MaintenanceDlg">InstallMode = "AddRemove"</Publish>
+         <Publish Event="NewDialog" Value="EulaDlg" />
+      </Control>
+      <Control Id="NextButton" Type="PushButton" X="300" Y="261" Width="66" Height="18" Default="yes" Text="&amp;Next &gt;">
+         <Publish Event="NewDialog" Value="ConfirmInstallDlg" />
+      </Control>
+   </Dialog>
+
+           
+   <!--$$      
+      ConfirmInstallDlg      
+   $$-->
+   <Dialog Id="ConfirmInstallDlg" Width="373" Height="287" Title="[ProductName]">
+      <Control Id="BannerBmp" Type="Bitmap" X="0" Y="0" Width="373" Height="52" TabSkip="no" Text="DefBannerBitmap" />
+      <Control Id="Line1" Type="Line" X="0" Y="52" Width="373" Height="6" Text="MsiHorizontalLine" />
+      <Control Id="BannerText" Type="Text" X="9" Y="9" Width="306" Height="33" Transparent="yes">
+         <Text>{\MsSansSerifBold13}Confirm Installation</Text>
+      </Control>
+      <Control Id="BodyText1" Type="Text" X="9" Y="63" Width="354" Height="180">
+         <Text><![CDATA[The installer is ready to install [ProductName] on your computer.
+
+Click "Next" to start the installation.]]></Text>
+      </Control>
+      
+      <Control Id="Line2" Type="Line" X="0" Y="252" Width="373" Height="6" Text="MsiHorizontalLine" />
+      <Control Id="NextButton" Type="PushButton" X="300" Y="261" Width="66" Height="18" Default="yes" Text="&amp;Next &gt;">
+         <Publish Event="EndDialog" Value="Return">ConfirmInstallDlg_NextArgs=""</Publish>
+         <Publish Event="NewDialog" Value="[ConfirmInstallDlg_NextArgs]"><![CDATA[ConfirmInstallDlg_NextArgs<>""]]></Publish>
+      </Control>
+      <Control Id="CancelButton" Type="PushButton" X="156" Y="261" Width="66" Height="18" Cancel="yes" Text="Cancel">
+         <Publish Event="SpawnDialog" Value="CancelDlg"></Publish>
+      </Control>
+      <Control Id="PreviousButton" Type="PushButton" X="228" Y="261" Width="66" Height="18" Text="&lt; &amp;Back">
+         <Publish Event="NewDialog" Value="CustomizeDlg" />
+      </Control>      
+   </Dialog>
+   
+   <!--$$
+      ProgressDlg
+   $$-->
+   <Dialog Id="ProgressDlg" Width="373" Height="287" Title="[ProductName]" Modeless="yes">
+      <Control Id="NextButton" Type="PushButton" X="300" Y="261" Width="66" Height="18" Disabled="yes" Text="&amp;Next &gt;" />
+      <Control Id="CancelButton" Type="PushButton" X="156" Y="261" Width="66" Height="18" Cancel="yes" Text="Cancel">
+         <Publish Event="SpawnDialog" Value="CancelDlg"></Publish>
+      </Control>
+      <Control Id="PreviousButton" Type="PushButton" X="228" Y="261" Width="66" Height="18" Disabled="yes" Text="&lt; &amp;Back" />
+      <Control Id="BannerBmp" Type="Bitmap" X="0" Y="0" Width="373" Height="52" TabSkip="no" Text="DefBannerBitmap" />
+      <Control Id="Line1" Type="Line" X="0" Y="52" Width="373" Height="6" Text="MsiHorizontalLine" />
+      <Control Id="Line2" Type="Line" X="0" Y="252" Width="373" Height="6" Text="MsiHorizontalLine" />
+      <Control Id="ProgressBar" Type="ProgressBar" X="18" Y="108" Width="336" Height="15" Text="MsiProgressBar">
+         <Subscribe Event="StopServices" Attribute="Progress" />
+         <Subscribe Event="DeleteServices" Attribute="Progress" />
+         <Subscribe Event="RemoveRegistryValues" Attribute="Progress" />
+         <Subscribe Event="RemoveFiles" Attribute="Progress" />
+         <Subscribe Event="MoveFiles" Attribute="Progress" />
+         <Subscribe Event="InstallFiles" Attribute="Progress" />
+         <Subscribe Event="WriteRegistryValues" Attribute="Progress" />
+         <Subscribe Event="WriteIniValues" Attribute="Progress" />
+         <Subscribe Event="StartServices" Attribute="Progress" />
+         <Subscribe Event="InstallAdminPackage" Attribute="Progress" />
+         <Subscribe Event="UnmoveFiles" Attribute="Progress" />
+         <Subscribe Event="SetProgress" Attribute="Progress" />
+      </Control>
+      <Control Id="ProgressLabel" Type="Text" X="18" Y="96" Width="336" Height="12">
+         <Text>Please wait...</Text>
+      </Control>
+      <Control Id="InstalledBody" Type="Text" X="9" Y="63" Width="354" Height="12">
+         <Text>[ProductName] is being installed.</Text>
+         <Condition Action="show">REMOVE=""</Condition>
+         <Condition Action="hide"><![CDATA[REMOVE<>""]]></Condition>
+      </Control>
+      <Control Id="RemovedBody" Type="Text" X="18" Y="63" Width="336" Height="12">
+         <Text>[ProductName] is being removed.</Text>
+         <Condition Action="show"><![CDATA[REMOVE<>""]]></Condition>
+         <Condition Action="hide">REMOVE=""</Condition>
+      </Control>
+      <Control Id="RemoveBannerText" Type="Text" X="9" Y="9" Width="306" Height="33" Transparent="yes">
+         <Text>{\MsSansSerifBold13}Removing [ProductName]</Text>
+         <Condition Action="show"><![CDATA[REMOVE<>""]]></Condition>
+         <Condition Action="hide">REMOVE=""</Condition>
+      </Control>
+      <Control Id="InstalledBannerText" Type="Text" X="9" Y="9" Width="255" Height="33" Transparent="yes">
+         <Text>{\MsSansSerifBold13}Installing [ProductName]</Text>
+         <Condition Action="show">REMOVE=""</Condition>
+         <Condition Action="hide"><![CDATA[REMOVE<>""]]></Condition>
+      </Control>
+   </Dialog>
+         
+   <!--$$
+      FinishedDlg
+   $$-->
+   <Dialog Id="FinishedDlg" Width="373" Height="287" Title="[ProductName]">
+      <Control Id="CloseButton" Type="PushButton" X="300" Y="261" Width="66" Height="18" Default="yes" Cancel="yes" Text="&amp;Close">
+         <Publish Event="EndDialog" Value="Return">1</Publish>
+      </Control>
+      <Control Id="CancelButton" Type="PushButton" X="156" Y="261" Width="66" Height="18" Disabled="yes" Text="Cancel" />
+      <Control Id="PreviousButton" Type="PushButton" X="228" Y="261" Width="66" Height="18" Disabled="yes" Text="&lt; &amp;Back" />
+      <Control Id="BannerBmp" Type="Bitmap" X="0" Y="0" Width="373" Height="52" TabSkip="no" Text="DefBannerBitmap" />
+      <Control Id="Line1" Type="Line" X="0" Y="52" Width="373" Height="6" Text="MsiHorizontalLine" />
+      <Control Id="Line2" Type="Line" X="0" Y="252" Width="373" Height="6" Text="MsiHorizontalLine" />
+      <Control Id="BannerText" Type="Text" X="9" Y="9" Width="306" Height="33" Transparent="yes">
+         <Text>{\MsSansSerifBold13}Installation Complete</Text>
+      </Control>
+      <Control Id="BodyText" Type="Text" X="9" Y="63" Width="354" Height="138">
+         <Text>[ProductName] has been successfully installed.</Text>
+         <Condition Action="show">REMOVE=""</Condition>
+         <Condition Action="hide"><![CDATA[REMOVE<>""]]></Condition>
+      </Control>
+      <Control Id="BodyTextRemove" Type="Text" X="9" Y="63" Width="354" Height="138">
+         <Text>[ProductName] has been successfully removed.</Text>
+         <Condition Action="show"><![CDATA[REMOVE<>""]]></Condition>
+         <Condition Action="hide">REMOVE=""</Condition>
+      </Control>
+      <Control Id="UpdateText" Type="Text" X="9" Y="216" Width="354" Height="36">
+         <Condition Action="show">REMOVE=""</Condition>
+         <Condition Action="hide"><![CDATA[REMOVE<>""]]></Condition>
+      </Control>
+   </Dialog>         
+   
+   <!--$$
+      UserExitDlg
+   $$-->
+   <Dialog Id="UserExitDlg" Width="373" Height="287" Title="[ProductName]">
+      <Control Id="CloseButton" Type="PushButton" X="300" Y="261" Width="66" Height="18" Default="yes" Cancel="yes" Text="&amp;Close">
+         <Publish Event="EndDialog" Value="Return">1</Publish>
+      </Control>
+      <Control Id="CancelButton" Type="PushButton" X="156" Y="261" Width="66" Height="18" Disabled="yes" Text="Cancel" />
+      <Control Id="PreviousButton" Type="PushButton" X="228" Y="261" Width="66" Height="18" Disabled="yes" Text="&lt; &amp;Back" />
+      <Control Id="BannerBmp" Type="Bitmap" X="0" Y="0" Width="373" Height="52" TabSkip="no" Text="DefBannerBitmap" />
+      <Control Id="Line1" Type="Line" X="0" Y="52" Width="373" Height="6" Text="MsiHorizontalLine" />
+      <Control Id="Line2" Type="Line" X="0" Y="252" Width="373" Height="6" Text="MsiHorizontalLine" />
+      <Control Id="BannerText" Type="Text" X="9" Y="9" Width="306" Height="33" Transparent="yes">
+         <Text>{\MsSansSerifBold13}Installation Interrupted</Text>
+      </Control>
+      <Control Id="BodyTextInstall" Type="Text" X="18" Y="63" Width="342" Height="24">
+         <Text>The installation was interrupted before [ProductName] could be installed. You need to restart the installer to try again.</Text>
+         <Condition Action="show">REMOVE=""</Condition>
+         <Condition Action="hide"><![CDATA[REMOVE<>""]]></Condition>
+      </Control>
+      <Control Id="BodyTextRemove" Type="Text" X="9" Y="63" Width="354" Height="180">
+         <Text>The installer was interrupted before [ProductName] could be removed. You need to restart the installer to try again.</Text>
+         <Condition Action="show"><![CDATA[REMOVE<>""]]></Condition>
+         <Condition Action="hide">REMOVE=""</Condition>
+      </Control>
+   </Dialog>
+               
+   <!--$$
+      FatalErrorDlg
+   $$-->
+   <Dialog Id="FatalErrorDlg" Width="373" Height="287" Title="[ProductName]">
+      <Control Id="CloseButton" Type="PushButton" X="300" Y="261" Width="66" Height="18" Default="yes" Cancel="yes" Text="&amp;Close">
+         <Publish Event="EndDialog" Value="Return">1</Publish>
+      </Control>
+      <Control Id="CancelButton" Type="PushButton" X="156" Y="261" Width="66" Height="18" Disabled="yes" Text="Cancel" />
+      <Control Id="PreviousButton" Type="PushButton" X="228" Y="261" Width="66" Height="18" Disabled="yes" Text="&lt; &amp;Back" />
+      <Control Id="BannerBmp" Type="Bitmap" X="0" Y="0" Width="373" Height="52" TabSkip="no" Text="DefBannerBitmap" />
+      <Control Id="Line1" Type="Line" X="0" Y="52" Width="373" Height="6" Text="MsiHorizontalLine" />
+      <Control Id="Line2" Type="Line" X="0" Y="252" Width="373" Height="6" Text="MsiHorizontalLine" />
+      <Control Id="BannerText" Type="Text" X="9" Y="9" Width="306" Height="33" Transparent="yes">
+         <Text>{\MsSansSerifBold13}Installation Incomplete</Text>
+      </Control>
+      <Control Id="BodyTextInstall" Type="Text" X="9" Y="63" Width="354" Height="180">
+         <Text>The installer was interrupted before [ProductName] could be removed. You need to restart the installer to try again.</Text>
+         <Condition Action="show"><![CDATA[REMOVE<>""]]></Condition>
+         <Condition Action="hide">REMOVE=""</Condition>
+      </Control>
+      <Control Id="BodyTextRemove" Type="Text" X="9" Y="63" Width="354" Height="180">
+         <Text>The installer was interrupted before [ProductName] could be installed. You need to restart the installer to try again.</Text>
+         <Condition Action="show">REMOVE=""</Condition>
+         <Condition Action="hide"><![CDATA[REMOVE<>""]]></Condition>
+      </Control>
+   </Dialog>
+   
+   <!--$$
+      CancelDlg
+   $$-->
+   <Dialog Id="CancelDlg" Width="271" Height="78" Title="[ProductName]" NoMinimize="yes">
+      <Control Id="NoButton" Type="PushButton" X="198" Y="48" Width="65" Height="21" Default="yes" Cancel="yes" Text="&amp;No">
+         <Publish Event="EndDialog" Value="Return"></Publish>
+      </Control>
+      <Control Id="YesButton" Type="PushButton" X="126" Y="48" Width="65" Height="21" Text="&amp;Yes">
+         <Publish Event="EndDialog" Value="Exit"></Publish>
+      </Control>
+      <Control Id="BodyText" Type="Text" X="6" Y="9" Width="258" Height="24">
+         <Text>The installation is not yet complete. Are you sure you want to exit?</Text>
+      </Control>
+   </Dialog>
+
+</Include>

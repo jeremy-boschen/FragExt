@@ -1,0 +1,60 @@
+
+BUILD_PRODUCES       = CoFrag.Dll
+BUILD_CONSUMES       = FragEng.Dll
+
+COFFBASE_TXT_FILE    = ..\CoffBase.txt
+COFFBASE             = cofrag
+
+USE_NATIVE_EH        = 1
+
+PRECOMPILED_CXX      = 1
+PRECOMPILED_INCLUDE  = Stdafx.h
+PRECOMPILED_OBJ      = Stdafx.obj
+PRECOMPILED_PCH      = Stdafx.pch
+
+MAKEDLL              = 1
+DLLDEF               = CoFrag.def
+TARGETNAME           = CoFrag
+TARGETTYPE           = DYNLINK
+TARGETEXT            = dll
+
+USE_ATL              = 1
+ATL_VER              = 71
+
+NOT_LEAN_AND_MEAN    = 1
+
+LINKER_FLAGS         = $(LINKER_FLAGS) /NXCOMPAT
+
+!IF $(FREEBUILD)
+USER_C_FLAGS         = $(USER_C_FLAGS) /D_LOADRESTRICTIONS_OFF /U_LOADRESTRICTIONS_ON
+!ENDIF
+
+NTTARGETFILE0        = CustomPreBuild_Target
+NTTARGETFILE1        = CustomBuild_Target
+NTTARGETFILE2        = CustomPostBuild_Target
+
+TARGETLIBS = \
+   $(TARGETLIBS)                       \
+   $(SDK_LIB_PATH)\kernel32.lib        \
+   $(SDK_LIB_PATH)\user32.lib          \
+   $(SDK_LIB_PATH)\gdi32.lib           \
+   $(SDK_LIB_PATH)\advapi32.lib        \
+   $(SDK_LIB_PATH)\comdlg32.lib        \
+   $(SDK_LIB_PATH)\ole32.lib           \
+   $(SDK_LIB_PATH)\oleaut32.lib        \
+   $(SDK_LIB_PATH)\uuid.lib            \
+   $(SDK_LIB_PATH)\comctl32.lib        \
+   $(SDK_LIB_PATH)\shell32.lib         \
+   $(ATL_LIB_PATH)\atls.lib            \
+   ..\FragEng.Dll\$O\FragEng.lib       \
+
+SOURCES = \
+   CoFrag.rc         \
+   CoFrag.idl        \
+   Module.cpp        \
+   DllMain.cpp       \
+   DllRegister.cpp   \
+   DllComServer.cpp  \
+   FileStreams.cpp   \
+   FileFrags.cpp     \
+   $O\CoFrag_i.c     \
